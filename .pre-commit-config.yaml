@@ -1,0 +1,114 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+## TO USE
+# > cd {REPOSITORY_ROOT}
+# > pip install pre-commit
+# > pre-commit install -c {THIS_FILE_PATH}
+
+# Use command line OR any git gui interface
+# > git add xyz.xyz
+# > git commit -m "This is my very descriptive and helpful message"
+
+# For supported hooks, this will let it know what to check for (e.g. `black`)
+default_language_version:
+    python: python3.8
+
+default_stages: [commit]
+
+# Each of these represents a step to run
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.1.0
+      hooks:
+          - id: check-added-large-files # as it sounds, checks for accidental adds
+            name: Checking for large files
+            args: ["--maxkb=10000"]
+          - id: check-yaml # check syntax
+            name: Checking yaml syntax
+          - id: detect-aws-credentials # look for accidental credential commits
+            name: Checking for commited AWS credentials
+          - id: detect-private-key # ditto
+            name: Checking for commited private keys
+          - id: debug-statements # check for commented out debugs
+            name: Checking for debug statements
+          - id: requirements-txt-fixer # sort requirements.txt files
+            name: Sorting requirements.txt files
+
+    # isort:
+    - repo: local
+      hooks:
+          - id: isort
+            name: Sorting imports
+            entry: isort --profile black --line-length=120
+            language: system
+            types: [python]
+
+    # black formatter
+    - repo: https://github.com/psf/black
+      rev: master
+      hooks:
+          - id: black
+            name: Formatting code with black
+            args: ["--line-length=120", "--target-version=py38"]
+            language: system
+            types: [python]
+
+    # The below 2 may require you to go back a few times to fix issues especially flake8
+    # This can be good for consistency, but a pain if it is not needed
+
+    # Check for dead code
+    # - repo: https://github.com/asottile/dead
+    #   rev: master
+    #   hooks:
+    #       - id: dead
+    #         name: Looking unused code
+
+    # check for commented out code
+    - repo: local
+      hooks:
+          - id: eradicate
+            name: Looking for commented out code
+            entry: eradicate
+            language: system
+            types: [python]
+
+    # flake8 checks
+    - repo: https://gitlab.com/pycqa/flake8
+      rev: master
+      hooks:
+          - id: flake8
+            name: Running flake8 checks
+            args: ["--ignore=E203,E501,W503,W601"]
+            verbose: true
+
+    # CC with xenon  (thanks Tom!)
+    - repo: https://github.com/yunojuno/pre-commit-xenon
+      rev: cc59b0431a5d072786b59430e9b342b2881064f6
+      hooks:
+          - id: xenon
+            name: Running Cyclomatic Complexity checks
+            args: ["--max-average=A", "--max-modules=C", "--max-absolute=C"]
+
+    # run pylint your code NOT COMPATIBLE WITH ISORT 5
+    # - repo: local
+    #   hooks:
+    #       - id: pylint
+    #         name: Running pylint
+    #         entry: pylint
+    #         language: system
+    #         types: [python]
+
+    # This will add a md and unstage the ipynb for notebooks
+    - repo: local
+      hooks:
+          - id: jupytext
+            name: Converting .ipynb files to markdown
+            entry: jupytext --to md
+            files: .ipynb
+            language: python
+          - id: unstage-ipynb
+            name: Unstaging the source ipynb files from the commit
+            entry: git reset HEAD **/*.ipynb || echo "no ipynb files found"
+            pass_filenames: false
+            language: system
