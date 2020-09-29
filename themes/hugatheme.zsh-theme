@@ -76,7 +76,7 @@ virtualenv_format() {
 }
 
 return_code() {
-    echo "%(?.%{$fg[green]%}↵%f.%{$fg[red]%}✘%f) "
+    echo "%(?.%{$fg[green]%}%f.%{$fg[red]%}✘%f) "
 }
 
 PROMPT="$(machine_name)$(dir_path)$(git_prompt) "
