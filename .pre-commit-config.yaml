@@ -26,8 +26,8 @@ repos:
             args: ["--maxkb=10000"]
           - id: check-yaml # check syntax
             name: Checking yaml syntax
-          - id: detect-aws-credentials # look for accidental credential commits
-            name: Checking for commited AWS credentials
+#          - id: detect-aws-credentials # look for accidental credential commits
+#            name: Checking for commited AWS credentials
           - id: detect-private-key # ditto
             name: Checking for commited private keys
           - id: debug-statements # check for commented out debugs
