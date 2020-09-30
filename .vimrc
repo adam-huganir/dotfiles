@@ -6,14 +6,17 @@ set backspace=indent,eol,start
 
 """"""" vim-plug
 call plug#begin('~/.vim/plugged')
+"""" Sensible Defaults
+Plug 'tpope/vim-sensible'
 
 """" Filebrowsing drawer
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 
 """" Command line stuff:
 "Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
 
 """" Some recommended plugins that I havent looked at yet
 " Plug 'liuchengxu/vista.vim' " LSB tag browser, add later if needed
@@ -49,6 +52,9 @@ syntax enable
 let g:Powerline_symbols = 'fancy'
 let g:airline_theme = 'understated'
 let g:airline_powerline_fonts = 1
+
+"""" Clap commands
+
 
 """" FZF settings
 " create LS/FIND command
