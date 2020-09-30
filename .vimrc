@@ -1,8 +1,6 @@
 """"" Usability
 "" Turn on mouse support
 set mouse=a
-"" Backspace as backspace
-set backspace=indent,eol,start
 
 """"""" vim-plug
 call plug#begin('~/.vim/plugged')
