@@ -62,31 +62,27 @@ ZSH_THEME="hugatheme"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    conda-zsh-completion
-    cp
-    docker
-    docker-compose
-    gcloud
-    git
-    gitignore
-    history
-    jira
-    kubectl
-    kubetail
-    man
-    npm
-#    autoswitch_virtualenv # does not seem to work
-    postgres
-    python
-    rsync
-    skaffold
-    ssh
+#    cp
+#    docker
+#    docker-compose
+#    gcloud
+#    git
+#    gitignore
+#    history
+#    jira
+#    kubectl
+#    kubetail
+#    man
+#    npm
+#    rsync
+#    skaffold
+#    ssh
     ssh-agent
-    sudo
-    systemd
-    ubuntu
-    zsh-autosuggestions
-    zsh-completions
+#    sudo
+#    systemd
+#    ubuntu
+#    zsh-autosuggestions
+#    zsh-completions
     zsh-syntax-highlighting
 )
 
@@ -130,3 +126,11 @@ if [ -f "$GCLOUD_HOME/path.zsh.inc" ]; then . "$GCLOUD_HOME/path.zsh.inc"; fi
 if [ -f "$GCLOUD_HOME/completion.zsh.inc" ]; then . "$GCLOUD_HOME/completion.zsh.inc"; fi
 # kubectl completions
 source <(kubectl completion zsh) 2> /dev/null
+
+# FZF settings
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+# export FZF_COMPLETION_TRIGGER='~~' # ** clashes with some other autocomplete (maybe zsh?)
+
+# Some custom functions
+. ~/rc/functions.sh
