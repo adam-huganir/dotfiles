@@ -81,7 +81,7 @@ plugins=(
 #    sudo
 #    systemd
 #    ubuntu
-    zsh-autosuggestions
+#    zsh-autosuggestions
 #    zsh-completions
     zsh-syntax-highlighting
 )
