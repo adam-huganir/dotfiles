@@ -45,6 +45,9 @@ Plug 'edkolev/tmuxline.vim'
 
 call plug#end()
 
+"""" tabwidth default to 4
+
+
 """" COC
 "
 " some python server stuff
