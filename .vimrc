@@ -1,6 +1,10 @@
-""""" Usability
+
 "" Turn on mouse support
 set mouse=a
+
+""""" Python3 interpreter (using base env)
+" set pythonthreehome=/home/adam/.pyenv/versions/base/bin/python
+
 
 """"""" vim-plug
 call plug#begin('~/.vim/plugged')
@@ -11,9 +15,12 @@ Plug 'tpope/vim-sensible'
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'Shougo/defx.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
 
 """" Command line stuff:
-"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 "Plug 'ctrlpvim/ctrlp.vim'
 
 """" Some recommended plugins that I havent looked at yet
@@ -44,14 +51,19 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
 
 call plug#end()
-
+ 
 """" tabwidth default to 4
 
+
+"""" Clap keymaps
+nnoremap <C-S-p> :Clap command<CR>
+nnoremap <C-p> :Clap filer<CR>
 
 """" COC
 "
 " some python server stuff
 command! PythonEnv CocCommand python.setInterpreter
+command! SetInterp CocCommand python.setInterpreter
 command! Isort CocCommand python.sortImports
 
 "
