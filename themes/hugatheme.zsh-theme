@@ -63,7 +63,8 @@ kubectl_context_abbr() {
    ARROW_BG="003"
    PREV_ARROW_BG="009"
    PREV_ARROW_FG="003"
-   echo "$(arrow_start_l) \${\$(kubectl config current-context)##*_} $(arrow_end_l)"
+   CONTEXT=$(if [ `command -v kubectl` ]; then echo `kubectl config current-context`; else echo none; fi)
+   echo "$(arrow_start_l) ${CONTEXT##*_} $(arrow_end_l)"
 }
 
 virtualenv_format() {
