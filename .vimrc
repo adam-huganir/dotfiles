@@ -43,6 +43,8 @@ Plug 'Rykka/riv.vim'
 Plug 'Rykka/InstantRst'
 " csv
 Plug 'chrisbra/csv.vim'
+" toml
+Plug 'cespare/vim-toml'
 
 """" Themes
 Plug 'sickill/vim-monokai'

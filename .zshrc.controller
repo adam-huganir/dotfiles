@@ -1,0 +1,34 @@
+# computer specific settings
+export Z_HOME="$HOME/apps/z"
+export GCLOUD_HOME="$HOME/apps/google-cloud-sdk"
+
+# Add in your additional plugins here
+plugins=(
+    docker
+    docker-compose
+    git
+    gitignore
+    gcloud
+    kubectl
+    kubetail
+    rsync
+    skaffold
+)
+
+# run the default zsh config from the RC repo
+. /home/adam/rc/.zshrc
+
+# Redshred envs
+source ~/.config/.redshred
+
+# jump around
+source $Z_HOME/z.sh
+
+# Launch any background apps, glances and jupyterlab
+tmux has-session -t services 2> /dev/null || tmux new-session -ds services /home/adam/.pyenv/versions/base/bin/glances -s
+tmux display-message -t services:jupyter 2> /dev/null || tmux new-window -t services -n jupyter -d jl
+
+# make the capslock into an escape key
+setxkbmap -option caps:escape
+
+alias install-kernel='python -m ipykernel install --user --name `cat .python-version`'

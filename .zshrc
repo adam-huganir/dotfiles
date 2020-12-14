@@ -62,13 +62,12 @@ ZSH_THEME="hugatheme"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-#    cp
+     $plugins
 #    docker
 #    docker-compose
 #    gcloud
 #    git
 #    gitignore
-#    history
 #    jira
 #    kubectl
 #    kubetail
@@ -76,13 +75,12 @@ plugins=(
 #    npm
 #    rsync
 #    skaffold
-#    ssh
     ssh-agent
 #    sudo
 #    systemd
 #    ubuntu
     zsh-autosuggestions
-#    zsh-completions
+    zsh-completions
     zsh-syntax-highlighting
 )
 
@@ -99,25 +97,14 @@ export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='emacs'
+  export EDITOR='vim'
 else
   export EDITOR='code'
 fi
 
-# ALIASES:
-alias emacs="emacs -nw"
-
+# NVM
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-# Redshred envs
-source ~/.config/.redshred
-
-# jump around
-source $Z_HOME/z.sh
-
-# launch glances server
-tmux has-session -t services 2> /dev/null || tmux new -ds services glances -s
 
 # Google
 # The next line updates PATH for the Google Cloud SDK.

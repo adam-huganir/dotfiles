@@ -12,3 +12,4 @@ _get_cpu_mem () {
         python3 -c "import xmlrpc.client, json; _ = json.loads(xmlrpc.client.ServerProxy(\"http://localhost:61209\").getAll()); print(f\"MEM {_['quicklook']['mem']/100.0:4.0%} | CPU {_['quicklook']['cpu']/100.0:4.0%}\")"
 }
 
+ssh-loop() { while [ 1 ] ; do ssh $1 ; done}
