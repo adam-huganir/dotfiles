@@ -3,6 +3,11 @@ export Z_HOME="$HOME/apps/z"
 export GCLOUD_HOME="$HOME/apps/google-cloud-sdk"
 export RC_HOME="$HOME/rc"
 
+fpath=($HOME/.completions $fpath)
+
+# custom aliases before below to allow for completion
+alias k='kubectl'
+
 # Add in your additional plugins here
 plugins=(
     docker
@@ -10,14 +15,15 @@ plugins=(
     git
     gitignore
     gcloud
-    kubectl
     kubetail
     rsync
-    skaffold
 )
 
 # run the default zsh config from the RC repo
 source $RC_HOME/.zshrc
+
+# Host color display in terminal
+export HOST_DISPLAY_COLOR=$FG[050]
 
 # Redshred envs
 source $HOME/.config/.redshred
@@ -32,4 +38,13 @@ tmux display-message -t services:jupyter 2> /dev/null || tmux new-window -t serv
 # make the capslock into an escape key
 setxkbmap -option caps:escape
 
+# add custom completion directory:
+for COMPLETE_FILE in `ls $HOME/.completions` ; do echo $COMPLETE_FILE ; source $HOME/.completions/$COMPLETE_FILE ; done
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 alias install-kernel='python -m ipykernel install --user --name `cat .python-version`'
+alias code=code-insiders

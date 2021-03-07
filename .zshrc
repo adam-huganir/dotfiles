@@ -1,12 +1,5 @@
 export TERM=xterm-256color
 
-# Pyenv
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-export PYTHON_CONFIGURE_OPTS="--enable-shared"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
 # link to path file to add machine specific PATH extensions
 source $HOME/.path
 
@@ -63,22 +56,7 @@ ZSH_THEME="hugatheme"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
      $plugins
-#    docker
-#    docker-compose
-#    gcloud
-#    git
-#    gitignore
-#    jira
-#    kubectl
-#    kubetail
-#    man
-#    npm
-#    rsync
-#    skaffold
     ssh-agent
-#    sudo
-#    systemd
-#    ubuntu
     zsh-autosuggestions
     zsh-completions
     zsh-syntax-highlighting
@@ -86,7 +64,7 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# Fix docker plugins not working:
+# Make sure we reload completions (Fix docker plugins not working):
 autoload -U compinit && compinit
 
 # User configuration
@@ -94,30 +72,6 @@ autoload -U compinit && compinit
 
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='code'
-fi
-
-# NVM
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-# Google
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$GCLOUD_HOME/path.zsh.inc" ]; then . "$GCLOUD_HOME/path.zsh.inc"; fi
-# The next line enables shell command completion for gcloud.
-if [ -f "$GCLOUD_HOME/completion.zsh.inc" ]; then . "$GCLOUD_HOME/completion.zsh.inc"; fi
-# kubectl completions
-source <(kubectl completion zsh) 2> /dev/null
-
-# FZF settings
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-# export FZF_COMPLETION_TRIGGER='~~' # ** clashes with some other autocomplete (maybe zsh?)
 
 # Some custom functions
 . ~/rc/functions.sh
