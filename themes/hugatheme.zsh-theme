@@ -30,7 +30,7 @@ arrow_start_l() {
 }
 
 machine_name() {
-   BG_NUM=$(python -S -c "import random; random.seed('$(hostname)'); print(random.randrange(0, 256))")
+   BG_NUM=050
    ARROW_FG="016"
    ARROW_BG="$BG_NUM"
    NEXT_ARROW_BG="009"
@@ -63,8 +63,8 @@ kubectl_context_abbr() {
    ARROW_BG="003"
    PREV_ARROW_BG="009"
    PREV_ARROW_FG="003"
-   CONTEXT=$(if [ `command -v kubectl` ]; then echo `kubectl config current-context`; else echo none; fi)
-   echo "$(arrow_start_l) ${CONTEXT##*_} $(arrow_end_l)"
+   CONTEXT=$(kubectl config current-context 2> /dev/null)
+   echo "$(arrow_start_l) \${\"\$(kubectl config current-context 2> /dev/null)\"} $(arrow_end_l)"
 }
 
 virtualenv_format() {
