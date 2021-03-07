@@ -1,6 +1,7 @@
 # computer specific settings
 export Z_HOME="$HOME/apps/z"
 export GCLOUD_HOME="$HOME/apps/google-cloud-sdk"
+export RC_HOME="$HOME/rc"
 
 # Add in your additional plugins here
 plugins=(
@@ -16,16 +17,16 @@ plugins=(
 )
 
 # run the default zsh config from the RC repo
-. /home/adam/rc/.zshrc
+source $RC_HOME/.zshrc
 
 # Redshred envs
-source ~/.config/.redshred
+source $HOME/.config/.redshred
 
 # jump around
 source $Z_HOME/z.sh
 
 # Launch any background apps, glances and jupyterlab
-tmux has-session -t services 2> /dev/null || tmux new-session -ds services /home/adam/.pyenv/versions/base/bin/glances -s
+tmux has-session -t services 2> /dev/null || tmux new-session -ds services $HOME/.pyenv/versions/base/bin/glances -s
 tmux display-message -t services:jupyter 2> /dev/null || tmux new-window -t services -n jupyter -d jl
 
 # make the capslock into an escape key
