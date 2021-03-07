@@ -30,7 +30,7 @@ arrow_start_l() {
 }
 
 machine_name() {
-   BG_NUM=050
+   BG_NUM=$PROMPT_MACHINE_BACKGROUND_COLOR
    ARROW_FG="016"
    ARROW_BG="$BG_NUM"
    NEXT_ARROW_BG="009"
