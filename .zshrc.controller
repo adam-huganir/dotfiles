@@ -35,10 +35,10 @@ setxkbmap -option caps:escape
 
 # Installed app initis
 source $Z_HOME/z.sh
-source rc/fzf_init.zsh
-source rc/nvm_init.zsh
-source rc/pyenv_init.zsh
-source rc/gcloud_init.zsh
+source $RC_HOME/fzf_init.zsh
+source $RC_HOME/nvm_init.zsh
+source $RC_HOME/pyenv_init.zsh
+source $RC_HOME/gcloud_init.zsh
 
 # Completions
 source <(kubectl completion zsh)
