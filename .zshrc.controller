@@ -1,12 +1,8 @@
 # computer specific settings
+export PROMPT_MACHINE_BACKGROUND_COLOR=060
 export Z_HOME="$HOME/apps/z"
 export GCLOUD_HOME="$HOME/apps/google-cloud-sdk"
 export RC_HOME="$HOME/rc"
-
-fpath=($HOME/.completions $fpath)
-
-# custom aliases before below to allow for completion
-alias k='kubectl'
 
 # Add in your additional plugins here
 plugins=(
@@ -29,7 +25,6 @@ export HOST_DISPLAY_COLOR=$FG[050]
 source $HOME/.config/.redshred
 
 # jump around
-source $Z_HOME/z.sh
 
 # Launch any background apps, glances and jupyterlab
 tmux has-session -t services 2> /dev/null || tmux new-session -ds services $HOME/.pyenv/versions/base/bin/glances -s
@@ -38,13 +33,19 @@ tmux display-message -t services:jupyter 2> /dev/null || tmux new-window -t serv
 # make the capslock into an escape key
 setxkbmap -option caps:escape
 
-# add custom completion directory:
-for COMPLETE_FILE in `ls $HOME/.completions` ; do echo $COMPLETE_FILE ; source $HOME/.completions/$COMPLETE_FILE ; done
+# Installed app initis
+source $Z_HOME/z.sh
+source rc/fzf_init.zsh
+source rc/nvm_init.zsh
+source rc/pyenv_init.zsh
+source rc/gcloud_init.zsh
 
+# Completions
+source <(kubectl completion zsh)
+source <(skaffold completion zsh)
+source <(minikube completion zsh)
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
+# custom aliases before below to allow for completion
+alias k='kubectl'
 alias install-kernel='python -m ipykernel install --user --name `cat .python-version`'
 alias code=code-insiders
