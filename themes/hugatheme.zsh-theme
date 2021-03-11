@@ -55,7 +55,7 @@ git_prompt() {
 }
 
 pyenv_name () {
-    echo $(pyenv version-name)
+    echo $(pyenv version-name 2> /dev/null)
 }
 
 kubectl_context_abbr() {
