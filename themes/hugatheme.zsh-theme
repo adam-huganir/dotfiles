@@ -55,7 +55,18 @@ git_prompt() {
 }
 
 pyenv_name () {
-    echo $(pyenv version-name 2> /dev/null)
+    if [[  "$PATH" == *"pyenv"* ]]
+    then
+    	if [[  $VIRTUAL_ENV  == *".venv"* ]];
+        then
+            name=`echo poetry:$(echo $VIRTUAL_ENV  | sed -r 's#(/src)?/.venv## ' | sed -r 's#.*/##'  )`
+        else
+            name=`echo pyenv:$(pyenv version-name)`
+        fi
+    else
+    	name="no pyenv"
+    fi
+    echo $name
 }
 
 kubectl_context_abbr() {

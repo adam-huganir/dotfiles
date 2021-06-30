@@ -47,6 +47,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+export VIRTUAL_ENV_DISABLE_PROMPT=1 # not needed with hugatheme
 ZSH_THEME="hugatheme"
 
 # Which plugins would you like to load?
