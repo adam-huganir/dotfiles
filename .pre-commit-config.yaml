@@ -40,29 +40,23 @@ repos:
       hooks:
           - id: isort
             name: Sorting imports
-            entry: isort --profile black --line-length=120
+            entry: isort 
+            args: ["--profile=black",  "--line-length=120"]
             language: system
             types: [python]
 
     # black formatter
-    - repo: https://github.com/psf/black
-      rev: master
+    - repo: local
       hooks:
           - id: black
             name: Formatting code with black
+            entry: black
             args: ["--line-length=120", "--target-version=py38"]
             language: system
             types: [python]
 
     # The below 2 may require you to go back a few times to fix issues especially flake8
     # This can be good for consistency, but a pain if it is not needed
-
-    # Check for dead code
-    # - repo: https://github.com/asottile/dead
-    #   rev: master
-    #   hooks:
-    #       - id: dead
-    #         name: Looking unused code
 
     # check for commented out code
     - repo: local
@@ -74,30 +68,15 @@ repos:
             types: [python]
 
     # flake8 checks
-    - repo: https://gitlab.com/pycqa/flake8
-      rev: master
+    - repo: local
       hooks:
           - id: flake8
             name: Running flake8 checks
+            entry: flake8
             args: ["--ignore=E203,E501,W503,W601"]
             verbose: true
-
-    # CC with xenon  (thanks Tom!)
-    - repo: https://github.com/yunojuno/pre-commit-xenon
-      rev: cc59b0431a5d072786b59430e9b342b2881064f6
-      hooks:
-          - id: xenon
-            name: Running Cyclomatic Complexity checks
-            args: ["--max-average=A", "--max-modules=C", "--max-absolute=C"]
-
-    # run pylint your code NOT COMPATIBLE WITH ISORT 5
-    # - repo: local
-    #   hooks:
-    #       - id: pylint
-    #         name: Running pylint
-    #         entry: pylint
-    #         language: system
-    #         types: [python]
+            language: system
+            types: [python]
 
     # This will add a md and unstage the ipynb for notebooks
     - repo: local

@@ -30,7 +30,7 @@ arrow_start_l() {
 }
 
 machine_name() {
-   BG_NUM=050
+   BG_NUM=$PROMPT_MACHINE_BACKGROUND_COLOR
    ARROW_FG="016"
    ARROW_BG="$BG_NUM"
    NEXT_ARROW_BG="009"
@@ -55,7 +55,18 @@ git_prompt() {
 }
 
 pyenv_name () {
-    echo $(pyenv version-name)
+    if [[  "$PATH" == *"pyenv"* ]]
+    then
+    	if [[  $VIRTUAL_ENV  == *".venv"* ]];
+        then
+            name=`echo poetry:$(echo $VIRTUAL_ENV  | sed -r 's#(/src)?/.venv## ' | sed -r 's#.*/##'  )`
+        else
+            name=`echo pyenv:$(pyenv version-name)`
+        fi
+    else
+    	name="no pyenv"
+    fi
+    echo $name
 }
 
 kubectl_context_abbr() {

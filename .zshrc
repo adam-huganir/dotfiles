@@ -75,3 +75,4 @@ export LANG=en_US.UTF-8
 
 # Some custom functions
 . ~/rc/functions.sh
+alias lsdisk='lsblk --output NAME,MOUNTPOINT,LABEL,PARTLABEL,FSUSE%,KNAME,MODE,SIZE,TYPE,STATE,UUID,PARTUUID --exclude 7'
