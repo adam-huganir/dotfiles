@@ -57,6 +57,7 @@ ZSH_THEME="hugatheme"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
      $plugins
+    git-prompt
     ssh-agent
     zsh-autosuggestions
     zsh-completions
@@ -75,4 +76,6 @@ autoload -U compinit && compinit
 export LANG=en_US.UTF-8
 
 # Some custom functions
-. ~/rc/functions.sh
+. ~/dotfiles/functions.sh
+
+export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
