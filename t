@@ -1,3 +1,0 @@
-#!/bin/bash
-
-tmux attach -t $1 || tmux new -s $1
