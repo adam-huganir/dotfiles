@@ -78,7 +78,8 @@ export FZF_COMPLETION_TRIGGER='##'
 
 ### pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-command-found pyenv && export PATH="$PYENV_ROOT/bin:$PATH" && eval "$(pyenv init -)"
+command-found pyenv || export PATH="$PYENV_ROOT/bin:$PATH"
+command-found pyenv && eval "$(pyenv init -)"
 
 
 ############### GO #############
@@ -150,5 +151,4 @@ source "$DOTFILES_HOME/utd.sh"
 
 
 command-found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
-
 alias clipboard='xclip -sel clip'
