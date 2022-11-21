@@ -1,28 +1,40 @@
-set -o vi
+# Zsh stuff
 zmodload zsh/datetime
+
+
+# helper to only run certain commands if the command is installed
+function command-found() {command -v $1 > /dev/null}
+function exists() {[ -s "$1" ]}
+#     _______   ___    __
+#    / ____/ | / / |  / /
+#   / __/ /  |/ /| | / /
+#  / /___/ /|  / | |/ /
+# /_____/_/ |_/  |___/
+# PATH stuff
+export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
+export GOROOT="$HOME/.local/golang"
+export GOPATH="$HOME/.local/go"
+export PYENV_ROOT="$HOME/.pyenv"
+ANTIGEN_SCRIPT="$HOME/.antigen.zsh"
+YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
+export PATH="$HOME/.local/bin:$PYENV_ROOT/ bin:$GCLOUD_HOME/bin:$GOROOT/bin:$GOPATH/bin:$PATH"
 
 export LANG=en_US.UTF-8
 export DOTFILES_HOME="$HOME/dotfiles"
 
-export NVM_DIR="$HOME/.nvm"
-export PATH="$HOME/.local/bin:$HOME/.local/google-cloud-sdk/bin:/usr/local/go/bin:$PATH"
-
-#### Comp init#######
-source $HOME/antigen.zsh
-########################
-
-# Python envs
-source $DOTFILES_HOME/python.env
+# PYTHON ENVS
+. "$DOTFILES_HOME/python.env"
 
 # START ANTIGEN
-### omz 
+. $ANTIGEN_SCRIPT
+### omz
+
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
-antigen bundles <<EOF > /dev/null
+antigen bundles > /dev/null <<EOF
   command-not-found
   copybuffer
   docker
-  docker-compose
   fzf
   git
   gitignore
@@ -37,12 +49,16 @@ EOF
 
 antigen bundle zsh-users/zsh-autosuggestions > /dev/null
 antigen bundle zsh-users/zsh-completions > /dev/null
-# antigen bundle zchee/zsh-completions
 antigen bundle zdharma-continuum/fast-syntax-highlighting > /dev/null
+antigen bundle johanhaleby/kubetail > /dev/null
+
+
+### fzf
+[ -f $HOME/.fzf.zsh ] && source ~/.fzf.zsh
+command-found fzf && antigen bundle joshskidmore/zsh-fzf-history-search > /dev/null
 
 ## finalize antigen
 antigen apply
-# antigen cache-gen
 # END ANTIGEN
 
 ### Misc completions ###
@@ -50,105 +66,50 @@ antigen apply
 autoload -U bashcompinit
 bashcompinit
 
-function command-found() {command -v $1 > /dev/null}
 
-command-found kubectl && source <(kubectl completion zsh)
-command-found helm && source <(helm completion zsh)
-command-found skaffold && source <(skaffold completion zsh)
+command-found kubectl && . <(kubectl completion zsh)
+command-found helm && . <(helm completion zsh)
+command-found skaffold && . <(skaffold completion zsh)
 command-found pipx && eval "$(register-python-argcomplete pipx)"
-command-found minikube && source <(minikube completion zsh)
-command-found gcloud && source $HOME/.local/google-cloud-sdk/completion.zsh.inc
-command-found poe && source <(poe _zsh_completion)
-command-found stern && source <(stern --completion zsh)
-command-found istioctl && source <(istioctl completion zsh)
-command-found kn && source <(kn completion zsh)
+command-found minikube && . <(minikube completion zsh)
+command-found gcloud && . "$GCLOUD_HOME/completion.zsh.inc"
+command-found poe && . <(poe _zsh_completion)
+command-found stern && . <(stern --completion zsh)
+command-found istioctl && . <(istioctl completion zsh)
+command-found kn && . <(kn completion zsh)
+command-found faas-cli && . <(faas-cli completion --shell zsh)
 
 #########################
 
-########### GCLOUD ##########
-#############################
 
 ##### fast-syntax-highlighting #####
 FAST_HIGHLIGHT[use_brackets]=1
 ####################################
 
-######## fzf #############
-export FZF_COMPLETION_TRIGGER='##'
-##########################
-
 ### pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-command-found pyenv || export PATH="$PYENV_ROOT/bin:$PATH"
-command-found pyenv && eval "$(pyenv init -)"
-
-
-############### GO #############
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"
+command-found pyenv && eval "$(pyenv init --path)"
 
 ### cargo
-[[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+exists "$HOME/.cargo/env" && source "$HOME/.cargo/env"
 
 ### nvm
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-### fzf
-[ -f $HOME/.fzf.zsh ] && source ~/.fzf.zsh
-
-
-#aws, bzr, cwd, direnv, docker, docker-context, dotenv, duration, exit,
-# fossil, gcp, git, gitlite, goenv, hg, host, jobs, kube, load, newline, nix-shell,
-#node, perlbrew, perms, plenv, rbenv, root, rvm, shell-var, shenv, ssh, svn,
-# termtitle, terraform-workspace, time, user, venv, vgo, vi-mode, wsl)
-# defaults: venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root
-############ THEME ##############
-function powerline_precmd() {
-    local __ERRCODE=$?
-    local __DURATION=0
-    
-    if [ -n $__TIMER ]; then
-        local __ERT=$EPOCHREALTIME
-        __DURATION="$(($__ERT - ${__TIMER:-__ERT}))"
-    fi
-    eval "$($GOPATH/bin/powerline-go \
-        -eval -shell zsh -git-mode compact \
-        -cwd-max-depth 6 -cwd-max-dir-size 20 \
-        -venv-name-size-limit 26 \
-        -colorize-hostname -hostname-only-if-ssh \
-        -modules host,ssh,cwd,git,hg,svn,jobs,perms \
-        -modules-right exit,dotenv,venv,kube,duration,time \
-        -duration $__DURATION -duration-min 10 \
-        -theme gruvbox \
-    -error $__ERRCODE -jobs $(jobs | wc -l))"
-    unset __TIMER
-    
-}
-
-
-function preexec() {
-    __TIMER=$EPOCHREALTIME
-}
-
-function install_powerline_precmd() {
-    for s in "${precmd_functions[@]}"; do
-        if [ "$s" = "powerline_precmd" ]; then
-            return
-        fi
-    done
-    precmd_functions+=(powerline_precmd)
-}
-
-
-if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
-    install_powerline_precmd
-fi
-################################
+NVM_DIR="$HOME/.nvm"
+exists "$NVM_DIR/nvm.sh" && source "$NVM_DIR/nvm.sh"  # This loads nvm
+exists "$NVM_DIR/bash_completion" && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # my stuff
-source "$DOTFILES_HOME/utd.sh"
-
+exists "$DOTFILES_HOME/utd.sh" && . "$DOTFILES_HOME/utd.sh"
+exists  "$DOTFILES_HOME/functions.sh" && . "$DOTFILES_HOME/functions.sh"
 
 
 command-found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
+
+# X env only
 alias clipboard='xclip -sel clip'
+# Wezterm only
+alias imgcat='wezterm imgcat'
+alias pdr='patch-deployment reader'
+
+############ THEME ##############
+eval "$(starship init zsh)"
+################################

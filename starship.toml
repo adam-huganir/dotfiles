@@ -1,0 +1,213 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+#
+#ristretto:
+#  id: "ristretto"
+#  name: Monokai Pro (Filter Ristretto)
+#  colors:
+#    # primary colors
+#    red: "#fd6883"
+#    orange: "#f38d70"
+#    yellow: "#f9cc6c"
+#    green: "#adda78"
+#    blue: "#85dacc"
+#    purple: "#a8a9eb"
+#    # base colors
+#    base0: "#191515"
+#    base1: "#211c1c"
+#    base2: "#2c2525"
+#    base3: "#403838"
+#    base4: "#5b5353"
+#    base5: "#72696a"
+#    base6: "#8c8384"
+#    base7: "#c3b7b8"
+#    base8: "#fff1f3"
+#    # variants
+#    base8x0c: "#352e2e"
+
+#  geometry symbols: , , ,   (these all live in the E0B0+ range
+
+add_newline = false
+
+format = """\
+
+[](#fd6883)\
+$hostname\
+[](fg:#fd6883 bg:#f38d70)\
+$directory\
+[](fg:#f38d70 bg:#f9cc6c)\
+$git_branch\
+$git_status\
+[](fg:#f9cc6c bg:#86BBD8)\
+$c\
+$elixir\
+$elm\
+$golang\
+$haskell\
+$java\
+$julia\
+$nodejs\
+$nim\
+$rust\
+$scala\
+[  ](fg:#86BBD8)\
+"""
+
+right_format  = """\
+$status\
+${custom.env_file}\
+${custom.poetry_env}\
+[ ](fg:#403838)\
+$python\
+[ ](fg:#8c8384 bg:#403838)\
+$kubernetes\
+[ ](fg:#c3b7b8 bg:#8c8384)\
+$time\
+[](fg:#c3b7b8)\
+"""
+
+[python]
+version_format = "${raw}"
+style = "fg:#c3b7b8 bg:#403838"
+format = "[$version:$virtualenv]($style)"
+
+[status]
+disabled=false
+style = "fg:red bold strikethrough"
+symbol = ""
+format = "[$symbol$status]($style)"
+
+[custom.env_alert]
+detect_files = [".env"]
+symbol = " "
+style = "fg:yellow blink"
+#format
+
+[custom.poetry_env]
+when = """
+! {[[ "$VIRTUAL_ENV" == *pypoetry* ]] ||  env=$(poetry env info -p 2>/dev/null) && [[ "$(which python)" == *"$env"* ]]}
+"""
+style = "blink"
+symbol = "🐍"
+format = "[$symbol]($style)"
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "fg:#352e2e  bg:#c3b7b8"
+format = '[ $time ]($style)'
+
+
+[kubernetes]
+disabled = false
+style = "fg:#fff1f3 bg:#8c8384"
+symbol = ""
+
+format = "[$symbol $context( ($namespace))]($style)"
+[kubernetes.context_aliases]
+"local" = "⛵ "
+
+# You can also replace your username with a neat symbol like  to save some space
+[username]
+show_always = false
+style_user = "bg:#fd6883 fg:#191515"
+style_root = "bg:#fd6883 fg:#191515"
+format = '[$user ]($style)'
+
+[hostname]
+ssh_only = false
+ssh_symbol = "☎️"
+style = "bg:#fd6883 fg:#191515"
+format = "[$hostname $ssh_symbol]($style)"
+
+[directory]
+style = "fg:#211c1c bg:#f38d70"
+repo_root_style  =  "fg:#fff1f3 bg:#f38d70"
+read_only = "  "
+read_only_style =  "fg:#a8a9eb bg:#f38d70"
+
+repo_root_format = "[ $before_root_path]($style)[$repo_root]($repo_root_style)[$path ]($style)[$read_only]($read_only_style)"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"/home/data/redshred" = " "
+
+
+[c]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[docker_context]
+symbol = " "
+style = "bg:#06969A"
+format = '[ $symbol $context ]($style) $path'
+
+[elixir]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[elm]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[git_branch]
+symbol = ""
+style = "fg:#2c2525 bg:#f9cc6c"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "fg:#2c2525 bg:#f9cc6c"
+format = '[$all_status$ahead_behind ]($style)'
+
+[golang]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[java]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[julia]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+# get rid of node_modules since I don't want this  on the home screen
+detect_folders = []
+symbol = ""
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[nim]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
+
+[scala]
+symbol = " "
+style = "bg:#86BBD8 fg:white"
+format = '[ $symbol ($version) ]($style)'
