@@ -61,6 +61,9 @@ command-found fzf && antigen bundle joshskidmore/zsh-fzf-history-search > /dev/n
 antigen apply
 # END ANTIGEN
 
+# load in all the zsh lib stuff
+exists "$ANTIGEN_BUNDLES/robbyrussell/oh-my-zsh" && . "$ANTIGEN_BUNDLES/robbyrussell/oh-my-zsh/oh-my-zsh.sh"
+
 ### Misc completions ###
 # Add bash compat
 autoload -U bashcompinit
