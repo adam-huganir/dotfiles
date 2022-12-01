@@ -6,16 +6,16 @@ function latest-image-tag() {
 	gcloud container images list-tags gcr.io/redshred-staging/${1} --format='get(tags[0])' --limit=1
 }
 
-patch-resource-name-image () {
-       kubectl patch ${1} ${2} --patch-file - <<EOF
-{
+patch-deployment-image () {
+  kubectl patch deployment ${1} --patch-file <(cat <<EOF
+   {
     "spec": {
-      "template":  {
+      "template": {
         "spec": {
           "containers": [
             {
-              "name": "${2}",
-              "image": "${3}"
+              "name": "${1}",
+              "image": "${2}"
             }
           ]
         }
@@ -23,6 +23,7 @@ patch-resource-name-image () {
     }
   }
 EOF
+  )
 }
 
 function read-logs () {

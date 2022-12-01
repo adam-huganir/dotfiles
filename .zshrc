@@ -90,7 +90,7 @@ command-found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
 alias clipboard='xclip -sel clip'
 # Wezterm only
 alias imgcat='wezterm imgcat'
-alias pdr='patch-deployment reader'
+alias pdr='patch-deployment-image reader'
 
 ############ THEME ##############
 eval "$(starship init zsh)"
