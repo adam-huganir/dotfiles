@@ -10,13 +10,14 @@ function exists() {[ -s "$1" ]}
 #  / /___/ /|  / | |/ /
 # /_____/_/ |_/  |___/
 # PATH stuff
+export ZSH=$HOME/.oh-my-zsh
 export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
 export GOROOT="$HOME/.local/golang"
 export GOPATH="$HOME/.local/go"
 export PYENV_ROOT="$HOME/.pyenv"
-ANTIGEN_SCRIPT="$HOME/.local/src/antigen.zsh"
 YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
 export PATH="$HOME/.local/bin:$PYENV_ROOT/ bin:$GCLOUD_HOME/bin:$GOROOT/bin:$GOPATH/bin:$PATH"
+exists "$HOME/.path" && . "$HOME/.path"
 
 export LANG=en_US.UTF-8
 export DOTFILES_HOME="$HOME/dotfiles"
@@ -24,51 +25,72 @@ export DOTFILES_HOME="$HOME/dotfiles"
 # PYTHON ENVS
 . "$DOTFILES_HOME/python.env"
 
-# START ANTIGEN
-. $ANTIGEN_SCRIPT
-### omz
+# USER stuff
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='lvim'
+else
+  export EDITOR='lvim'
+fi
 
+###### BEGIN  OH-MY-ZSH ######
+ZSH_THEME=""  # set to null so we can use starship
 COMPLETION_WAITING_DOTS="true"
-HIST_STAMPS="yyyy-mm-dd"
 
-antigen use oh-my-zsh
-antigen bundles <<EOF
+# History
+HIST_STAMPS="yyyy-mm-dd"
+HISTSIZE=50000
+SAVEHIST=100000
+
+# OH-MY-ZSH
+plugins=(
+  battery
+  bgnotify
   command-not-found
   copybuffer
   docker
+  emoji
+  extract
+  fast-syntax-highlighting
+  fd
   fzf
+  gh
   git
   gitignore
+  httpie
   isodate
   kubectx
+  kubetail
+  microk8s
   nmap
+  pip
   poetry
   ssh-agent
   terraform
+  ubuntu
+  ufw
   wakeonlan
   z
-EOF
+  zsh-autosuggestions
+  zsh-completions
+  zsh-interactive-cd
+#   jira
+#   zsh-fzf-history-search
+)
 
-# load in all the zsh lib stuff
-antigen bundle zsh-users/zsh-autosuggestions > /dev/null
-antigen bundle zsh-users/zsh-completions > /dev/null
-antigen bundle zdharma-continuum/fast-syntax-highlighting > /dev/null
-antigen bundle johanhaleby/kubetail > /dev/null
+source $ZSH/oh-my-zsh.sh
 
+# plugin  settings
+notify_threshold=120  # for bgnotify min seconds
+FAST_HIGHLIGHT[use_brackets]=1  # brackets work correctly
+
+
+###### END OH-MY-ZSH ######
 
 ### fzf
 exists "$HOME/.fzf.zsh" && . "$HOME/.fzf.zsh"
-command-found fzf && antigen bundle joshskidmore/zsh-fzf-history-search > /dev/null
-
-## finalize antigen
-antigen apply
-# END ANTIGEN
-
-##### fast-syntax-highlighting #####
-FAST_HIGHLIGHT[use_brackets]=1
-####################################
 
 ### pyenv
+export PYENV_VIRTUALENV_MANAGE=true
 command-found pyenv && eval "$(pyenv init --path)"
 
 ### cargo
@@ -95,7 +117,7 @@ eval "$(starship init zsh)"
 ################################
 
 ### Misc completions ###
-command-found kubectl &&. <(kubectl completion zsh)
+command-found kubectl && . <(kubectl completion zsh)
 command-found helm && . <(helm completion zsh)
 command-found skaffold && . <(skaffold completion zsh)
 command-found pipx && eval "$(register-python-argcomplete pipx)"
@@ -107,4 +129,4 @@ command-found istioctl && . <(istioctl completion zsh)
 command-found kn && . <(kn completion zsh)
 exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # below is needed to activate completions correctly
-complete -p > /dev/null  # https://github.com/zsh-users/antigen/issues/698
+# complete -p #> /dev/null  # https://github.com/zsh-users/antigen/issues/698
