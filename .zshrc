@@ -1,7 +1,5 @@
 # Zsh stuff
 zmodload zsh/datetime
-# autoload -U compinit && compinit
-# autoload -U bashcompinit && bashcompinit
 
 # helper to only run certain commands if the command is installed
 function command-found() {command -v $1 > /dev/null}
@@ -34,7 +32,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="yyyy-mm-dd"
 
 antigen use oh-my-zsh
-antigen bundles > /dev/null <<EOF
+antigen bundles <<EOF
   command-not-found
   copybuffer
   docker
@@ -44,6 +42,7 @@ antigen bundles > /dev/null <<EOF
   isodate
   kubectx
   nmap
+  poetry
   ssh-agent
   terraform
   wakeonlan
@@ -78,7 +77,6 @@ exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
 ### nvm
 NVM_DIR="$HOME/.nvm"
 exists "$NVM_DIR/nvm.sh" && . "$NVM_DIR/nvm.sh"  # This loads nvm
-exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # my stuff
 exists "$DOTFILES_HOME/utd.sh" && . "$DOTFILES_HOME/utd.sh"
@@ -107,4 +105,6 @@ command-found poe && . <(poe _zsh_completion)
 command-found stern && . <(stern --completion zsh)
 command-found istioctl && . <(istioctl completion zsh)
 command-found kn && . <(kn completion zsh)
-command-found faas-cli && . <(faas-cli completion --shell zsh)
+exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# below is needed to activate completions correctly
+complete -p > /dev/null  # https://github.com/zsh-users/antigen/issues/698
