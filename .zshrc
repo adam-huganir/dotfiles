@@ -128,5 +128,7 @@ command-found stern && . <(stern --completion zsh)
 command-found istioctl && . <(istioctl completion zsh)
 command-found kn && . <(kn completion zsh)
 exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # below is needed to activate completions correctly
 # complete -p #> /dev/null  # https://github.com/zsh-users/antigen/issues/698
+compinit

@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+function pdf-n-pages { pdfinfo "$1" | grep -oP "(?<=Pages:)(.*)" | tr -s ' ' ; }
+
 function ktxt() { kubectl config use "$1" }
 
 function latest-image-tag() {
