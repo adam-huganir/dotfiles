@@ -10,14 +10,13 @@ function exists() {[ -s "$1" ]}
 #  / /___/ /|  / | |/ /
 # /_____/_/ |_/  |___/
 # PATH stuff
-export ZSH=$HOME/.oh-my-zsh
+export OMZ_HOME=$HOME/.oh-my-zsh
 export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
 export GOROOT="$HOME/.local/golang"
 export GOPATH="$HOME/.local/go"
 export PYENV_ROOT="$HOME/.pyenv"
 YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
 export PATH="$HOME/.local/bin:$PYENV_ROOT/ bin:$GCLOUD_HOME/bin:$GOROOT/bin:$GOPATH/bin:$PATH"
-exists "$HOME/.path" && . "$HOME/.path"
 
 export LANG=en_US.UTF-8
 export DOTFILES_HOME="$HOME/dotfiles"
@@ -25,11 +24,20 @@ export DOTFILES_HOME="$HOME/dotfiles"
 # PYTHON ENVS
 . "$DOTFILES_HOME/python.env"
 
-# USER stuff
-if [[ -n $SSH_CONNECTION ]]; then
+# USER stuff and custom local overrides
+exists "$HOME/.path" && . "$HOME/.path"
+exists "$HOME/.python.env" && . "$HOME/.python.env"
+exists "$HOME/.zshrc.d/zshrc.zsh" && . "$HOME/.zshrc.d/zshrc.zsh"
+
+# EDITOR preference order
+if command-found lvim; then
   export EDITOR='lvim'
+elif command-found nvim; then
+  export EDITOR='nvim'
+elif command-found vim; then 
+  export EDITOR='vim'
 else
-  export EDITOR='lvim'
+  export EDITOR='nano'
 fi
 
 ###### BEGIN  OH-MY-ZSH ######
@@ -73,11 +81,12 @@ plugins=(
   zsh-autosuggestions
   zsh-completions
   zsh-interactive-cd
-#   jira
-#   zsh-fzf-history-search
 )
-
-source $ZSH/oh-my-zsh.sh
+CUSTOM_OMZ_FILE="$HOME/.zshr.d/omz-additional.zsh" # e.g. for adding plugins
+if exists "$CUSTOM_OMZ_FILE"; then
+  . $CUSTOM_OMZ_FILE
+fi
+source "$OMZ_HOME/oh-my-zsh.sh"
 
 # plugin  settings
 notify_threshold=120  # for bgnotify min seconds
@@ -130,5 +139,4 @@ command-found kn && . <(kn completion zsh)
 exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # below is needed to activate completions correctly
-# complete -p #> /dev/null  # https://github.com/zsh-users/antigen/issues/698
 compinit
