@@ -16,7 +16,7 @@ export GOROOT="$HOME/.local/golang"
 export GOPATH="$HOME/.local/go"
 export PYENV_ROOT="$HOME/.pyenv"
 YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
-export PATH="$HOME/.local/bin:$PYENV_ROOT/ bin:$GCLOUD_HOME/bin:$GOROOT/bin:$GOPATH/bin:$PATH"
+export PATH="$HOME/.local/bin:$PYENV_ROOT/bin:$GCLOUD_HOME/bin:$GOROOT/bin:$GOPATH/bin:$PATH"
 
 export LANG=en_US.UTF-8
 export DOTFILES_HOME="$HOME/dotfiles"
@@ -82,7 +82,7 @@ plugins=(
   zsh-completions
   zsh-interactive-cd
 )
-CUSTOM_OMZ_FILE="$HOME/.zshr.d/omz-additional.zsh" # e.g. for adding plugins
+CUSTOM_OMZ_FILE="$HOME/.zshrc.d/omz-additional.zsh" # e.g. for adding plugins
 if exists "$CUSTOM_OMZ_FILE"; then
   . $CUSTOM_OMZ_FILE
 fi
@@ -100,7 +100,7 @@ exists "$HOME/.fzf.zsh" && . "$HOME/.fzf.zsh"
 
 ### pyenv
 export PYENV_VIRTUALENV_MANAGE=true
-command-found pyenv && eval "$(pyenv init --path)"
+command-found pyenv && eval "$(pyenv init -)"
 
 ### cargo
 exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
