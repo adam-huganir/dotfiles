@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 
+function touchy {
+  mkdir -p $(dirname "$1")
+  touch "$1"
+}
+
 function pdf-n-pages { pdfinfo "$1" | grep -oP "(?<=Pages:)(.*)" | tr -s ' ' ; }
 
 function ktxt() { kubectl config use "$1" }
@@ -55,13 +60,13 @@ function tag-latest-image() {
 }
 
 # alias for basename->pwd (this could just be an alias, but I'm already in this file)
-pwdbasename() { basename $(pwd) } 
+pwdbasename() { basename $(pwd) }
 
 # Run an ssh loop to make sure you remain connected when possible
 ssh-loop() { while [ 1 ] ; do ssh $1 ; done}
 
 k8s-first-container() {
- arr=( $(kubectl get pods  --no-headers -l "app=$1" | cut -d\  -f1 | xargs echo -n) ) ; 
+ arr=( $(kubectl get pods  --no-headers -l "app=$1" | cut -d\  -f1 | xargs echo -n) ) ;
  echo "${arr[1]}";
 }
 
@@ -75,3 +80,24 @@ last-docker-image () {
 
 # copy paste from some online thing that is `$ etc`
 dolla() { _code=$(echo $@ | sed -r 's/^\s*\$\s*//') && eval $_code }
+
+git-report () {
+  offset=${1:-1}
+  for dir in ./*; do
+    git -C "$dir" branch --show-current &> /dev/null || continue
+    output="$(
+      git -C "$dir" --no-pager \
+        log --date=format:'%F %H:%m' \
+        --since="$(date +%F) -$((offset)) day"  \
+        --before="$(date +%F) - $((offset - 1)) day" \
+        --author="$(git config user.email)" \
+        --pretty=format:'%cd %Cblue| %Cgreen%s%n         %Cred%h %Cblue| %Creset%b' \
+        2> /dev/null
+    )" || continue
+    if [[ $output ]]; then
+      echo "======================= $dir ======================="
+      echo $output
+      echo
+    fi
+  done
+}
