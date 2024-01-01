@@ -9,7 +9,7 @@ function utd-wezterm () {
     exit 1
   fi
 
-  LINK="$(curl -s https://github.com/wez/wezterm/releases/ | \
+  LINK="$(curl -s https://github.com/wez/wezterm/releases/latest | \
     grep -m1 -oi '/wez/.*wezterm.*ubuntu'$RELEASE_VERSION'.deb' | \
     xargs -I % echo https://github.com%)"
   FILE=$(basename $LINK)
@@ -28,11 +28,17 @@ function utd-github () {
   rm github.deb
 }
 
+function utd-argocd () {
+  curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+  sudo install -o root -g root -m 0755 argocd-linux-amd64 /usr/local/bin/argocd
+  rm argocd-linux-amd64
+}
+
 
 function utd-skaffold () {
-  curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
-  sudo install skaffold /usr/local/bin/
-  rm skaffold
+  curl -LO skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+  sudo install -o root -g root -m 0755 skaffold-linux-amd64 /usr/local/bin/skaffold
+  rm skaffold-linux-amd64
 }
 
 function utd-helm () {

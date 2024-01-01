@@ -30,15 +30,28 @@
 add_newline = false
 
 format = """\
-
-[](#fd6883)\
+${custom.env_file}\
+${custom.poetry_env}\
+[](fg:#c3b7b8)\
+$time\
+[](fg:#c3b7b8 bg:#fd6883)\
 $hostname\
-[](fg:#fd6883 bg:#f38d70)\
+[](fg:#fd6883 )\
+[ ](fg:#403838)\
+$python\
+[](fg:#403838 bg:#8c8384)\
+$gcloud\
+[ |](bg:#8c8384)\
+$kubernetes\
+[](fg:#8c8384 )\
+[ ](fg:#f38d70 )\
 $directory\
 [](fg:#f38d70 bg:#f9cc6c)\
 $git_branch\
 $git_status\
 [](fg:#f9cc6c bg:#86BBD8)\
+$status\
+[](fg:#86BBD8 bg:#86BBD8)\
 $c\
 $elixir\
 $elm\
@@ -53,33 +66,46 @@ $scala\
 [  ](fg:#86BBD8)\
 """
 
-right_format  = """\
-$status\
-${custom.env_file}\
-${custom.poetry_env}\
-[ ](fg:#403838)\
-$python\
-[ ](fg:#8c8384 bg:#403838)\
-$kubernetes\
-[ ](fg:#c3b7b8 bg:#8c8384)\
-$time\
-[](fg:#c3b7b8)\
-"""
+#right_format  = """\
+#$status\
+#${custom.env_file}\
+#${custom.poetry_env}\
+#[ ](fg:#403838)\
+#$python\
+#[ ](fg:#8c8384 bg:#403838)\
+#$gcloud\
+#[ |](bg:#8c8384)\
+#$kubernetes\
+#[ ](fg:#c3b7b8 bg:#8c8384)\
+#$time\
+#[](fg:#c3b7b8)\
+#"""
+
+[gcloud]
+format = '[$symbol$active]($style)'
+style = "fg:#fff1f3 bg:#8c8384"
+symbol = "  "
+[gcloud.project_aliases]
+redshred-staging = 'staging'
+redshred-production = 'production'
+redshred-lite-sandbox = 'lite-sandbox'
+redshred-lite-nonprod = 'lite-nonprod'
+redshred-lite-prod = 'lite-prod'
 
 [python]
 version_format = "${raw}"
 style = "fg:#c3b7b8 bg:#403838"
-format = "[$version:$virtualenv]($style)"
+format = "[$version:$virtualenv ]($style)"
 
 [status]
 disabled=false
-style = "fg:red bold strikethrough"
+style = "fg:red bg:#86BBD8 bold strikethrough"
 symbol = ""
 format = "[$symbol$status]($style)"
 
 [custom.env_alert]
 detect_files = [".env"]
-symbol = " "
+symbol = "  "
 style = "fg:yellow blink"
 #format
 
@@ -88,7 +114,7 @@ when = """
 ! {[[ "$VIRTUAL_ENV" == *pypoetry* ]] ||  env=$(poetry env info -p 2>/dev/null) && [[ "$(which python)" == *"$env"* ]]}
 """
 style = "blink"
-symbol = "🐍"
+symbol = "🐍 "
 format = "[$symbol]($style)"
 
 [time]
@@ -118,7 +144,7 @@ format = '[$user ]($style)'
 ssh_only = false
 ssh_symbol = "☎️"
 style = "bg:#fd6883 fg:#191515"
-format = "[$hostname $ssh_symbol]($style)"
+format = "[ $hostname $ssh_symbol]($style)"
 
 [directory]
 style = "fg:#211c1c bg:#f38d70"
