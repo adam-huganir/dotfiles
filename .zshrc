@@ -1,5 +1,7 @@
 # Zsh stuff
 zmodload zsh/datetime
+export LANG=en_US.utf-8
+export LC_ALL=en_US.utf-8
 
 # helper to only run certain commands if the command is installed
 function command-found() {command -v $1 > /dev/null}
