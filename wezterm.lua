@@ -12,21 +12,34 @@ return {
   warn_about_missing_glyphs = false,
   leader = { key = "w", mods = "CTRL|ALT", timeout_milliseconds = 3000 },
   keys = {
-    { key = "q", mods = "LEADER", action = wezterm.action { CloseCurrentPane = { confirm = true } } },
-    { key = "%", mods = "LEADER|SHIFT", action = wezterm.action { SplitHorizontal = { domain = "CurrentPaneDomain" } } },
-    { key = "\"", mods = "LEADER|SHIFT", action = wezterm.action { SplitVertical = { domain = "CurrentPaneDomain" } } },
-    { key = "LeftArrow", mods = "LEADER", action = wezterm.action { ActivatePaneDirection = "Left" } },
-    { key = "LeftArrow", mods = "LEADER|CTRL", action = wezterm.action { AdjustPaneSize = { "Left", 1 } } },
-    { key = "RightArrow", mods = "LEADER", action = wezterm.action { ActivatePaneDirection = "Right" } },
-    { key = "RightArrow", mods = "LEADER|CTRL", action = wezterm.action { AdjustPaneSize = { "Right", 1 } } },
-    { key = "UpArrow", mods = "LEADER", action = wezterm.action { ActivatePaneDirection = "Up" } },
-    { key = "UpArrow", mods = "LEADER|CTRL", action = wezterm.action { AdjustPaneSize = { "Up", 1 } } },
-    { key = "DownArrow", mods = "LEADER", action = wezterm.action { ActivatePaneDirection = "Down" } },
-    { key = "DownArrow", mods = "LEADER|CTRL", action = wezterm.action { AdjustPaneSize = { "Down", 1 } } },
-    { key = "r", mods = "CTRL|SHIFT", action = "ReloadConfiguration" },
+    { key = "q",          mods = "LEADER",       action = wezterm.action { CloseCurrentPane = { confirm = true } } },
+    { key = "%",          mods = "LEADER|SHIFT", action = wezterm.action { SplitHorizontal = { domain = "CurrentPaneDomain" } } },
+    { key = "\"",         mods = "LEADER|SHIFT", action = wezterm.action { SplitVertical = { domain = "CurrentPaneDomain" } } },
+    { key = "LeftArrow",  mods = "LEADER",       action = wezterm.action { ActivatePaneDirection = "Left" } },
+    { key = "LeftArrow",  mods = "LEADER|CTRL",  action = wezterm.action { AdjustPaneSize = { "Left", 1 } } },
+    { key = "RightArrow", mods = "LEADER",       action = wezterm.action { ActivatePaneDirection = "Right" } },
+    { key = "RightArrow", mods = "LEADER|CTRL",  action = wezterm.action { AdjustPaneSize = { "Right", 1 } } },
+    { key = "UpArrow",    mods = "LEADER",       action = wezterm.action { ActivatePaneDirection = "Up" } },
+    { key = "UpArrow",    mods = "LEADER|CTRL",  action = wezterm.action { AdjustPaneSize = { "Up", 1 } } },
+    { key = "DownArrow",  mods = "LEADER",       action = wezterm.action { ActivatePaneDirection = "Down" } },
+    { key = "DownArrow",  mods = "LEADER|CTRL",  action = wezterm.action { AdjustPaneSize = { "Down", 1 } } },
+    { key = "r",          mods = "CTRL|SHIFT",   action = "ReloadConfiguration" },
+
+    -- disable alt-enter making fullscreen so it can be used in repls etc
+    { key = "Enter",      mods = "LEADER|ALT",   action = wezterm.action.ToggleFullScreen },
+    {
+      key = "Enter",
+      mods = "ALT",
+      action = wezterm.action.DisableDefaultAssignment,
+    },
   },
-
-
+  ssh_domains = {
+    {
+      name = "feynman",
+      remote_address = "feynman",
+      username = "adam",
+    },
+  },
   visual_bell = {
     fade_in_function = "EaseIn",
     fade_in_duration_ms = 150,

@@ -152,6 +152,7 @@ command-found stern && . <(stern --completion zsh)
 command-found istioctl && . <(istioctl completion zsh)
 command-found kn && . <(kn completion zsh)
 command-found argocd && . <(argocd completion zsh)
+command-found yq && . <(yq completion zsh)
 exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # below is needed to activate completions correctly
@@ -165,3 +166,5 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+[[ -s "/home/adam/.gvm/scripts/gvm" ]] && source "/home/adam/.gvm/scripts/gvm"
