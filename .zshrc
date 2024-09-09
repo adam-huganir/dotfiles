@@ -65,7 +65,6 @@ plugins=(
   emoji
   extract
   fast-syntax-highlighting
-  fd
   fzf
   gh
   git
@@ -78,6 +77,7 @@ plugins=(
   nmap
   pip
   poetry
+  rust
   ssh-agent
   terraform
   ubuntu
@@ -87,6 +87,7 @@ plugins=(
   zsh-autosuggestions
   zsh-completions
   zsh-interactive-cd
+  # zsh-vim-mode
 )
 CUSTOM_OMZ_FILE="$HOME/.zshrc.d/omz-additional.zsh" # e.g. for adding plugins
 if exists "$CUSTOM_OMZ_FILE"; then
@@ -100,6 +101,14 @@ FAST_HIGHLIGHT[use_brackets]=1  # brackets work correctly
 
 
 ###### END OH-MY-ZSH ######
+
+### Vim mode
+MODE_CURSOR_VIINS="#00ff00 blinking bar"
+MODE_CURSOR_REPLACE="$MODE_CURSOR_VIINS #ff0000"
+MODE_CURSOR_VICMD="green block"
+MODE_CURSOR_SEARCH="#ff00ff steady underline"
+MODE_CURSOR_VISUAL="$MODE_CURSOR_VICMD steady bar"
+MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 
 ### fzf
 exists "$HOME/.fzf.zsh" && . "$HOME/.fzf.zsh"
@@ -152,8 +161,15 @@ command-found stern && . <(stern --completion zsh)
 command-found istioctl && . <(istioctl completion zsh)
 command-found kn && . <(kn completion zsh)
 command-found argocd && . <(argocd completion zsh)
-command-found yq && . <(yq completion zsh)
+command-found yq && . <(yq shell-completion zsh)
 exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# wine
+if command-found wine; then
+  if exists "$HOME/.local/share/npp/notepad++.exe"; then
+    alias npp="nohup wine $HOME/.local/share/npp/notepad++.exe & >/dev/null 2>&1"
+  fi
+fi
 
 # below is needed to activate completions correctly
 compinit
