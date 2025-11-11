@@ -55,7 +55,7 @@ plugins=(
   bgnotify
   command-not-found
   copybuffer
-  docker
+  #docker
   emoji
   extract
   fast-syntax-highlighting

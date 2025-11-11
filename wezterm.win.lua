@@ -2,8 +2,8 @@ local wezterm = require 'wezterm';
 
 return {
 	    --  color_scheme = "Monokai Remastered",
+	default_prog = {"pwsh.exe"},
         font = wezterm.font_with_fallback({"Iosevka Term Curly", "FiraCode Nerd Font", "FiraCode NF"}),
-	default_prog = {"C:\\Program Files\\PowerShell\\7\\pwsh.exe"},
         line_height = 1.0,
         window_background_opacity = 0.9,
         text_background_opacity = 1.0,
