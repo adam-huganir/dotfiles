@@ -1,44 +1,27 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
-#
-#ristretto:
-#  id: "ristretto"
-#  name: Monokai Pro (Filter Ristretto)
-#  colors:
-#    # primary colors
-#    red: "#fd6883"
-#    orange: "#f38d70"
-#    yellow: "#f9cc6c"
-#    green: "#adda78"
-#    blue: "#85dacc"
-#    purple: "#a8a9eb"
-#    # base colors
-#    base0: "#191515"
-#    base1: "#211c1c"
-#    base2: "#2c2525"
-#    base3: "#403838"
-#    base4: "#5b5353"
-#    base5: "#72696a"
-#    base6: "#8c8384"
-#    base7: "#c3b7b8"
-#    base8: "#fff1f3"
-#    # variants
-#    base8x0c: "#352e2e"
 
 #  geometry symbols: , , ,   (these all live in the E0B0+ range
 
+# Global Configuration
 add_newline = false
+command_timeout = 500
+scan_timeout = 30
+follow_symlinks = true
+palette = "ristretto"
 
 format = """\
-
-[](#fd6883)\
+[](fg:red)\
+$os\
 $hostname\
-[](fg:#fd6883 bg:#f38d70)\
+[](fg:red bg:orange)\
+$container\
 $directory\
-[](fg:#f38d70 bg:#f9cc6c)\
+[](fg:orange bg:yellow)\
 $git_branch\
 $git_status\
-[](fg:#f9cc6c bg:#86BBD8)\
+$git_metrics\
+[](fg:yellow bg:blue)\
 $c\
 $elixir\
 $elm\
@@ -50,32 +33,64 @@ $nodejs\
 $nim\
 $rust\
 $scala\
-[  ](fg:#86BBD8)\
+[](fg:blue bg:base2)\
+$character\
+[](fg:base2)\
 """
 
 right_format  = """\
 $status\
+$sudo\
 ${custom.env_file}\
 ${custom.poetry_env}\
-[ ](fg:#403838)\
+[ ](fg:base3)\
 $python\
-[ ](fg:#8c8384 bg:#403838)\
+[ ](fg:base6 bg:base3)\
 $kubernetes\
-[ ](fg:#c3b7b8 bg:#8c8384)\
+[ ](fg:base7 bg:base6)\
 $time\
-[](fg:#c3b7b8)\
+[](fg:base7)\
 """
+
+[character]
+success_symbol = "[ ](fg:dark_green)"
+error_symbol = "[❌](fg:red)"
+
+[os]
+disabled = false
+style = "fg:blue bg:red"
+format = "[$symbol ]($style)"
+
+[os.symbols]
+Windows = "󰖳 "
+Linux = "󰌽 "
+Macos = "󰀵"
 
 [python]
 version_format = "${raw}"
-style = "fg:#c3b7b8 bg:#403838"
+style = "fg:base7 bg:base3"
 format = "[$version:$virtualenv]($style)"
+detect_extensions = ["py"]
+detect_files = ["requirements.txt", "pyproject.toml", "Pipfile", ".python-version"]
+detect_folders = []
 
 [status]
-disabled=false
+disabled = false
 style = "fg:red bold strikethrough"
 symbol = ""
 format = "[$symbol$status]($style)"
+
+[sudo]
+disabled = false
+style = "fg:purple bold"
+symbol = "🧙"
+format = "[$symbol]($style)"
+
+[container]
+disabled = false
+style = "fg:base8 bg:orange"
+symbol = ""
+format = "[$symbol ]($style)"
 
 [custom.env_alert]
 detect_files = [".env"]
@@ -94,38 +109,37 @@ format = "[$symbol]($style)"
 [time]
 disabled = false
 time_format = "%R" # Hour:Minute Format
-style = "fg:#352e2e  bg:#c3b7b8"
+style = "fg:base8x0c  bg:base7"
 format = '[ $time ]($style)'
 
 
 [kubernetes]
 disabled = false
-style = "fg:#fff1f3 bg:#8c8384"
+style = "fg:base8 bg:base6"
 symbol = ""
-
 format = "[$symbol $context( ($namespace))]($style)"
+
 [kubernetes.context_aliases]
 "local" = "⛵ "
 
-# You can also replace your username with a neat symbol like  to save some space
+# You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = false
-style_user = "bg:#fd6883 fg:#191515"
-style_root = "bg:#fd6883 fg:#191515"
+style_user = "bg:red fg:base0"
+style_root = "bg:red fg:base0"
 format = '[$user ]($style)'
 
 [hostname]
 ssh_only = false
 ssh_symbol = "☎️"
-style = "bg:#fd6883 fg:#191515"
+style = "bg:red fg:base0"
 format = "[$hostname $ssh_symbol]($style)"
 
 [directory]
-style = "fg:#211c1c bg:#f38d70"
-repo_root_style  =  "fg:#fff1f3 bg:#f38d70"
+style = "fg:base1 bg:orange"
+repo_root_style  =  "fg:base8 bg:orange"
 read_only = "  "
-read_only_style =  "fg:#a8a9eb bg:#f38d70"
-
+read_only_style =  "fg:purple bg:orange"
 repo_root_format = "[ $before_root_path]($style)[$repo_root]($repo_root_style)[$path ]($style)[$read_only]($read_only_style)"
 format = "[ $path ]($style)[$read_only]($read_only_style)"
 truncation_length = 3
@@ -138,12 +152,14 @@ truncation_symbol = "…/"
 "Downloads" = " "
 "Music" = " "
 "Pictures" = " "
-"/home/data/redshred" = " "
+"~/Code" = " "
+"/home/redshred" = " "
+"~/Code/redshred" = " "
 
 
 [c]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
@@ -153,61 +169,91 @@ format = '[ $symbol $context ]($style) $path'
 
 [elixir]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [elm]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-style = "fg:#2c2525 bg:#f9cc6c"
+style = "fg:base2 bg:yellow"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
-style = "fg:#2c2525 bg:#f9cc6c"
+style = "fg:base2 bg:yellow"
 format = '[$all_status$ahead_behind ]($style)'
+
+[git_metrics]
+disabled = false
+added_style = "fg:dark_green bg:yellow"
+deleted_style = "fg:dark_red bg:yellow"
+format = '([+$added ]($added_style)[-$deleted ]($deleted_style))'
 
 [golang]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [haskell]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [java]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [julia]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [nodejs]
 # get rid of node_modules since I don't want this  on the home screen
 detect_folders = []
-symbol = ""
-style = "bg:#86BBD8 fg:white"
+symbol = " "
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [nim]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [rust]
 symbol = ""
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
 
 [scala]
 symbol = " "
-style = "bg:#86BBD8 fg:white"
+style = "bg:blue fg:white"
 format = '[ $symbol ($version) ]($style)'
+
+# Color Palette Definition
+[palettes.ristretto]
+# primary colors
+red = "#fd6883"
+dark_red = "#AA0D00"
+orange = "#f38d70"
+yellow = "#f9cc6c"
+green = "#adda78"
+dark_green = "#008F0C"
+blue = "#85dacc"
+purple = "#a8a9eb"
+# base colors
+base0 = "#191515"
+base1 = "#211c1c"
+base2 = "#2c2525"
+base3 = "#403838"
+base4 = "#5b5353"
+base5 = "#72696a"
+base6 = "#8c8384"
+base7 = "#c3b7b8"
+base8 = "#fff1f3"
+# variants
+base8x0c = "#352e2e"
