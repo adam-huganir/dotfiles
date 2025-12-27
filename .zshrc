@@ -55,7 +55,7 @@ plugins=(
   bgnotify
   command-not-found
   copybuffer
-  #docker
+  docker
   emoji
   extract
   fast-syntax-highlighting
@@ -82,10 +82,7 @@ plugins=(
   zsh-completions
   zsh-interactive-cd
 )
-CUSTOM_OMZ_FILE="$HOME/.zshrc.d/omz-additional.zsh" # e.g. for adding plugins
-if exists "$CUSTOM_OMZ_FILE"; then
-  . $CUSTOM_OMZ_FILE
-fi
+
 source "$OMZ_HOME/oh-my-zsh.sh"
 
 # plugin  settings
