@@ -11,20 +11,10 @@ function exists() {[ -s "$1" ]}
 #   / __/ /  |/ /| | / /
 #  / /___/ /|  / | |/ /
 # /_____/_/ |_/  |___/
-# PATH stuff
-export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
-export GOROOT="$HOME/.local/golang"
-export GOPATH="$HOME/.local/go"
-export PYENV_ROOT="$HOME/.pyenv"
+# Common envs (shared between bash and zsh)
+exists "$HOME/dotfiles/.profile" && . "$HOME/dotfiles/.profile"
+
 ANTIGEN_SCRIPT="$HOME/.local/src/antigen.zsh"
-YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
-export PATH="$HOME/.local/bin:$PYENV_ROOT/ bin:$GCLOUD_HOME/bin:$GOROOT/bin:$GOPATH/bin:$PATH"
-
-export LANG=en_US.UTF-8
-export DOTFILES_HOME="$HOME/dotfiles"
-
-# PYTHON ENVS
-. "$DOTFILES_HOME/python.env"
 
 # START ANTIGEN
 . $ANTIGEN_SCRIPT

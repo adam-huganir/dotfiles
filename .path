@@ -1,0 +1,5 @@
+# App-specific paths (sourced by .profile)
+export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
+export GOROOT="$HOME/.local/golang"
+export GOPATH="$HOME/.local/go"
+export PYENV_ROOT="$HOME/.pyenv"

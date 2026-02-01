@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "windows" }}
+.path
+.profile
+.zshrc
+.alias
+{{ else }}
+readonly_Documents/PowerShell/profile.ps1
+{{ end }}
+unmanaged
+.editorconfig
+.gitignore
+.pre-commit-config.yaml
