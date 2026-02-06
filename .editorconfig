@@ -20,3 +20,8 @@ space_redirects = true
 keep_padding = true
 func_next_line = false
 # like -i=4
+
+# ssh config
+[config.tmpl]
+indent_style = space
+indent_size = 4

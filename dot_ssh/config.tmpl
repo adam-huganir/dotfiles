@@ -1,0 +1,23 @@
+Host *
+    ServerAliveInterval 300
+    ServerAliveCountMax 2
+
+{{ range .ssh.hosts }}
+{{- if eq (typeOf .) "map[string]interface {}" }}
+Host {{ range .Host }}{{ . }} {{- end }}
+    {{- if .User }}{{ nindent 4 ""}}User {{ .User }}{{ end}}
+    {{- if .HostName }}{{- nindent 4 ""}}HostName {{ .HostName }}{{ end}}
+    {{- if .Port }}{{ nindent 4 ""}}Port {{ .Port }}{{ end}}
+    {{- if .IdentityFile }}{{ nindent 4 ""}}IdentityFile {{ .IdentityFile }}{{ end}}
+    {{- if .ProxyJump }}{{ nindent 4 ""}}ProxyJump {{ .ProxyJump }}{{ end}}
+    {{- if .ForwardX11 }}{{ nindent 4 ""}}ForwardX11 {{ .ForwardX11 }}{{ end}}
+{{- else if eq (typeOf .) "string" }}
+{{comment "#" .}}
+{{- end }}
+{{ end }}
+
+{{ range .ssh.keys }}
+IdentityFile {{ . }}
+{{ end }}
+
+AddKeysToAgent  yes

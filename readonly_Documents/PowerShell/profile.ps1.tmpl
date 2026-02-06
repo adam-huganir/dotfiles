@@ -15,21 +15,27 @@ function ExistsInPath($name) {
   return $null -ne $cmdPath
 }
 
+{{ if not .appInit.starship.disable }}
 if (ExistsInPath "starship") {
-  Invoke-Expression (&starship init powershell)
+  Invoke-Expression ((&starship init powershell) -join "`n")
 }
+{{- end }}
 
+{{ if not .appInit.thefuck.disable }}
 # TheFuck alias
 if (ExistsInPath "thefuck") {
-  Invoke-Expression (&thefuck --alias oops)
+  Invoke-Expression ((&thefuck --alias oops) -join "`n")
 }
+{{- end}}
 
+{{ if not .appInit.chezmoi.disable }}
 if (ExistsInPath "chezmoi") {
-  Invoke-Expression (&chezmoi completion powershell)
+  Invoke-Expression ((&chezmoi completion powershell) -join "`n")
 }
+{{ end }}
 
 if (ExistsInPath "task") {
-  Invoke-Expression (&task --completion powershell)
+  Invoke-Expression ((&task --completion powershell) -join "`n")
 }
 function Which($name) {
   Get-Command -ErrorAction SilentlyContinue $name | %{ $_.Path; break; }

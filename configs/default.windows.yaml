@@ -1,0 +1,64 @@
+starship:
+  enabled: false
+
+appInit:
+  starship:
+    disable: false
+  thefuck:
+    disable: false
+  chezmoi:
+    disable: false
+  task:
+    disable: false
+
+
+ssh:
+  keys:
+  - ~/.ssh/local.huganir
+  _host_fields: &host_fields
+    Host: null
+    Port: null
+    User: null
+    IdentityFile: null
+    ForwardX11: null
+    HostName: null
+    ProxyJump: null
+  hosts:
+  - |-
+    HOME
+  - <<: *host_fields
+    Host: ["pve-*"]
+    User: root
+    IdentityFile: ~/.ssh/local.huganir
+  - <<: *host_fields
+    Host: ["router", "router.local.huganir.com"]
+    User: root
+    IdentityFile: ~/.ssh/local.huganir
+  - |-
+    Redshred
+  - <<: *host_fields
+    Host: ["shredder-5-3"]
+    User: adam
+    IdentityFile: ~/.ssh/local.huganir
+  - <<: *host_fields
+    Host: ["feynman"]
+    User: adam
+    Port: 1616
+    IdentityFile: ~/.ssh/feynman
+  - <<: *host_fields
+    Host: ["oestricher"]
+    User: adam
+    Port: 1617
+    IdentityFile: ~/.ssh/oestricher_npw
+  - |-
+    Git
+  - <<: *host_fields
+    Host: ["bitbucket.org"]
+    ForwardX11: no
+    IdentityFile: ~/.ssh/bitbucket_npw
+  - <<: *host_fields
+    Host: ["github.com"]
+    ForwardX11: no
+    IdentityFile: ~/.ssh/github_personal_redshred
+
+
