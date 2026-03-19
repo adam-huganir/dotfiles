@@ -101,3 +101,8 @@ git-report () {
     fi
   done
 }
+
+function gittag() {
+  printf "%s-%s" "$(date '+%Y%m%d-%H%M')" "$(git describe --broken --dirty --always)"
+}
+

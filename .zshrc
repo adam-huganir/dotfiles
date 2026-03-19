@@ -1,8 +1,13 @@
 # Zsh stuff
 zmodload zsh/datetime
+autoload -z edit-command-line
+zle -N edit-command-line
+#bindkey -M vicmd v edit-command-line
+
 setopt extended_glob
 setopt GLOB_STAR_SHORT
-
+unsetopt autocd
+set +x
 # helper to only run certain commands if the command is installed
 function command-found() {command -v $1 > /dev/null}
 function exists() {[ -s "$1" ]}
@@ -13,13 +18,14 @@ function exists() {[ -s "$1" ]}
 # /_____/_/ |_/  |___/
 # PATH stuff
 export OMZ_HOME=$HOME/.oh-my-zsh
-export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
+export GCLOUD_HOME="$HOME/.local/google-cloud-sdk" 
 export GOROOT="$HOME/.local/go"
+export GOPRIVATE=github.com/redshred
 export PYENV_ROOT="$HOME/.pyenv"
 YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
 
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export PATH="$HOME/dotfiles/scripts:$HOME/.local/bin:$PYENV_ROOT/bin:$GCLOUD_HOME/bin:$GOROOT/bin:$PATH"
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.fvm_flutter/bin:$PATH"
+export PATH="$HOME/dotfiles/scripts:$HOME/.local/bin:$PYENV_ROOT/bin:$GCLOUD_HOME/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.local/flutter/bin:$PATH"
 
 export LANG=en_US.UTF-8
 export DOTFILES_HOME="$HOME/dotfiles"
@@ -36,8 +42,8 @@ exists "$HOME/.python.env" && . "$HOME/.python.env"
 exists "$HOME/.zshrc.d/zshrc.zsh" && . "$HOME/.zshrc.d/zshrc.zsh"
 
 # EDITOR preference order
-if command-found lvim; then
-  export EDITOR='lvim'
+if command-found nvim; then
+  export EDITOR='nvim'
 elif command-found nvim; then
   export EDITOR='nvim'
 elif command-found vim; then
@@ -47,7 +53,7 @@ else
 fi
 
 ###### BEGIN  OH-MY-ZSH ######
-ZSH_THEME="agnoster"  # set to null so we can use starship
+ZSH_THEME="agnoster" # starship overrides
 COMPLETION_WAITING_DOTS="true"
 
 # History
@@ -62,8 +68,7 @@ plugins=(
   command-not-found
   copybuffer
   docker
-  emoji
-  extract
+ # emoji
   fast-syntax-highlighting
   fzf
   gh
@@ -84,10 +89,9 @@ plugins=(
   ufw
   wakeonlan
   z
-  zsh-autosuggestions
   zsh-completions
-  zsh-interactive-cd
-  # zsh-vim-mode
+  zsh-vim-mode
+  zsh-autosuggestions
 )
 CUSTOM_OMZ_FILE="$HOME/.zshrc.d/omz-additional.zsh" # e.g. for adding plugins
 if exists "$CUSTOM_OMZ_FILE"; then
@@ -96,9 +100,8 @@ fi
 source "$OMZ_HOME/oh-my-zsh.sh"
 
 # plugin  settings
-notify_threshold=120  # for bgnotify min seconds
-FAST_HIGHLIGHT[use_brackets]=1  # brackets work correctly
-
+notify_threshold=120           # for bgnotify min seconds
+FAST_HIGHLIGHT[use_brackets]=1 # brackets work correctly
 
 ###### END OH-MY-ZSH ######
 
@@ -114,15 +117,15 @@ MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 exists "$HOME/.fzf.zsh" && . "$HOME/.fzf.zsh"
 
 ### pyenv
-export PYENV_VIRTUALENV_MANAGE=true
-command-found pyenv && eval "$(pyenv init -)"
+export PYENV_VIRTUALENV_MANAGE=false
+# command-found pyenv && eval "$(pyenv init -)"
 
 ### cargo
 exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
 
-### nvm
-NVM_DIR="$HOME/.nvm"
-exists "$NVM_DIR/nvm.sh" && . "$NVM_DIR/nvm.sh"  # This loads nvm
+### n (node)
+export N_PREFIX="$HOME/.n"
+exists "$N_PREFIX" && export PATH="$N_PREFIX/bin:$PATH"
 
 # my stuff
 exists "$DOTFILES_HOME/utd.sh" && . "$DOTFILES_HOME/utd.sh"
@@ -139,30 +142,25 @@ alias pdr='patch-deployment-image reader'
 # copilot
 command-found github-copilot-cli && eval "$(github-copilot-cli alias -- "$0")"
 
-############ THEME ##############
-# ides + starship do not mix well
-if ! [[ $TERMINAL_EMULATOR = 'JetBrains'* || $TERM_PROGRAM = 'vscode'* ]]
-then
-  eval "$(starship init zsh)"
-fi
 
 ################################
 
 ### Misc completions ###
-command-found kubectl && . <(kubectl completion zsh)
-command-found helm && . <(helm completion zsh)
-command-found skaffold && . <(skaffold completion zsh)
 command-found pipx && eval "$(register-python-argcomplete pipx)"
-command-found ruff && . <(ruff generate-shell-completion zsh)
-command-found minikube && . <(minikube completion zsh)
+command-found ruff && eval "$(ruff generate-shell-completion zsh)"
 command-found gcloud && . "$GCLOUD_HOME/completion.zsh.inc"
-command-found poe && . <(poe _zsh_completion)
-command-found stern && . <(stern --completion zsh)
-command-found istioctl && . <(istioctl completion zsh)
-command-found kn && . <(kn completion zsh)
-command-found argocd && . <(argocd completion zsh)
-command-found yq && . <(yq shell-completion zsh)
-exists "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+command-found poe && eval "$(poe _zsh_completion)"
+command-found stern && eval "$(stern --completion zsh)"
+command-found yq && eval "$(yq shell-completion zsh)"
+command-found uv &&  eval "$(uv generate-shell-completion zsh)"
+
+command-found yq && eval "$(task --completion zsh)"
+export TASK_X_REMOTE_TASKFILES=1
+
+command-found rsctl && eval "$(rsctl --show-completion zsh)"
+for app in crane gcrane krane argo kn istioctl minikube skaffold helm kubectl; do
+  command-found $app && eval "$($app completion zsh)"
+done
 
 # wine
 if command-found wine; then
@@ -183,4 +181,28 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /home/adam/.dart-cli-completion/zsh-config.zsh ]] && . /home/adam/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+
+export TASK_X_REMOTE_TASKFILES=1
+set +x
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# bun completions
+[ -s "/home/adam/.bun/_bun" ] && source "/home/adam/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 [[ -s "/home/adam/.gvm/scripts/gvm" ]] && source "/home/adam/.gvm/scripts/gvm"
+
+[ ! -f "$HOME/.x-cmd.root/X" ] || . "$HOME/.x-cmd.root/X" # boot up x-cmd.
