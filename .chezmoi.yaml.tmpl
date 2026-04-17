@@ -1,0 +1,6 @@
+destDir: {{ env "HOME" }}
+sourceDir: {{ printf "%s/%s" (env "HOME") "dotfiles" }}
+bitwarden:
+  command: bw
+  unlock: auto
+umask: 0o022

@@ -11,8 +11,9 @@ Host {{ range .Host }}{{ . }} {{- end }}
     {{- if .IdentityFile }}{{ nindent 4 ""}}IdentityFile {{ .IdentityFile }}{{ end}}
     {{- if .ProxyJump }}{{ nindent 4 ""}}ProxyJump {{ .ProxyJump }}{{ end}}
     {{- if .ForwardX11 }}{{ nindent 4 ""}}ForwardX11 {{ .ForwardX11 }}{{ end}}
+    {{- if .HostKeyAlgorithms }}{{ nindent 4 ""}}HostKeyAlgorithms {{ .HostKeyAlgorithms }}{{ end}}
 {{- else if eq (typeOf .) "string" }}
-{{comment "#" .}}
+{{comment "# " .}}
 {{- end }}
 {{ end }}
 

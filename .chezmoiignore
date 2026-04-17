@@ -1,13 +1,16 @@
-{{ if eq .chezmoi.os "windows" }}
+{{- if eq .chezmoi.os "windows" -}}
 .path
 .profile
 .zshrc
 .alias
-{{ else }}
+{{- else -}}
 readonly_Documents/PowerShell/profile.ps1
-{{ end }}
-unmanaged
-configs
+{{- end }}
+
 .editorconfig
 .gitignore
 .pre-commit-config.yaml
+README.md
+configs
+unmanaged
+ref
