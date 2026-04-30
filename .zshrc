@@ -10,8 +10,14 @@ unsetopt autocd
 set +x
 
 # helper to only run certain commands if the command is installed
-function command-found() {command -v $1 > /dev/null}
+function command-found() {command -v $1 >/dev/null}
 function exists() {[ -s "$1" ]}
+function add_to_path() {
+  if [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1:$PATH"
+  fi
+}
+
 #     _______   ___    __
 #    / ____/ | / / |  / /
 #   / __/ /  |/ /| | / /
@@ -20,12 +26,10 @@ function exists() {[ -s "$1" ]}
 # PATH stuff
 export OMZ_HOME=$HOME/.oh-my-zsh
 export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
-export GOROOT="$HOME/.local/go"
 export GOPRIVATE=github.com/redshred
 export PYENV_ROOT="$HOME/.pyenv"
 YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
 
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.fvm_flutter/bin:$PATH"
 export PATH="$HOME/dotfiles/scripts:$HOME/.local/bin:$PYENV_ROOT/bin:$GCLOUD_HOME/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.local/flutter/bin:$PATH"
 
 export LANG=en_US.UTF-8
@@ -63,13 +67,13 @@ HISTSIZE=50000
 SAVEHIST=100000
 
 # OH-MY-ZSH
-plugins=(
+plugins= (
   battery
   bgnotify
   command-not-found
   copybuffer
   docker
- # emoji
+  # emoji
   fast-syntax-highlighting
   fzf
   gh
@@ -101,7 +105,7 @@ fi
 source "$OMZ_HOME/oh-my-zsh.sh"
 
 # plugin  settings
-notify_threshold=120           # for bgnotify min seconds
+notify_threshold=120 # for bgnotify min seconds
 FAST_HIGHLIGHT[use_brackets]=1 # brackets work correctly
 
 ###### END OH-MY-ZSH ######
@@ -143,7 +147,6 @@ alias pdr='patch-deployment-image reader'
 # copilot
 command-found github-copilot-cli && eval "$(github-copilot-cli alias -- "$0")"
 
-
 ################################
 
 ### Misc completions ###
@@ -153,7 +156,7 @@ command-found gcloud && . "$GCLOUD_HOME/completion.zsh.inc"
 command-found poe && eval "$(poe _zsh_completion)"
 command-found stern && eval "$(stern --completion zsh)"
 command-found yq && eval "$(yq shell-completion zsh)"
-command-found uv &&  eval "$(uv generate-shell-completion zsh)"
+command-found uv && eval "$(uv generate-shell-completion zsh)"
 
 command-found yq && eval "$(task --completion zsh)"
 export TASK_X_REMOTE_TASKFILES=1
@@ -177,11 +180,10 @@ alias gactivate="gcloud config configurations activate"
 # pnpm
 export PNPM_HOME="/home/adam/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
@@ -194,8 +196,8 @@ export TASK_X_REMOTE_TASKFILES=1
 set +x
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # bun completions
 [ -s "/home/adam/.bun/_bun" ] && source "/home/adam/.bun/_bun"

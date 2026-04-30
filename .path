@@ -1,5 +1,0 @@
-# App-specific paths (sourced by .profile)
-GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
-GOROOT="$HOME/.local/golang"
-GOPATH="$HOME/.local/go"
-PYENV_ROOT="$HOME/.pyenv"

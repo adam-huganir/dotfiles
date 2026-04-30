@@ -4,9 +4,9 @@
 .zshrc
 .alias
 {{- else -}}
-readonly_Documents/PowerShell/profile.ps1
-{{- end }}
+{{end}}
 
+readonly_Documents/PowerShell/profile.ps1
 .editorconfig
 .gitignore
 .pre-commit-config.yaml
