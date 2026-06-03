@@ -10,7 +10,7 @@ unsetopt autocd
 set +x
 
 # helper to only run certain commands if the command is installed
-function command-found() {command -v $1 >/dev/null}
+function command-found() {command -v $1 > /dev/null}
 function exists() {[ -s "$1" ]}
 function add_to_path() {
   if [[ ":$PATH:" != *":$1:"* ]]; then
@@ -25,20 +25,29 @@ function add_to_path() {
 # /_____/_/ |_/  |___/
 # PATH stuff
 export OMZ_HOME=$HOME/.oh-my-zsh
-export GCLOUD_HOME="$HOME/.local/google-cloud-sdk"
+export GCLOUD_HOME="/usr/share/google-cloud-sdk"
 export GOPRIVATE=github.com/redshred
 export PYENV_ROOT="$HOME/.pyenv"
-YARN_BIN="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin"
 
-export PATH="$HOME/dotfiles/scripts:$HOME/.local/bin:$PYENV_ROOT/bin:$GCLOUD_HOME/bin:$GOROOT/bin:$HOME/go/bin:$HOME/.local/flutter/bin:$PATH"
+for p in \
+	$HOME/dotfiles/scripts \
+	$HOME/.local/bin \
+	$PYENV_ROOT/bin \
+	$GCLOUD_HOME/bin \
+	$GOROOT/bin \
+	$HOME/go/bin \
+	$HOME/.local/flutter/bin \
+	$HOME/.lmstudio/bin \
+	$HOME/.yarn/bin \
+	$HOME/.config/yarn/global/node_modules/.bin \
+; do
+	add_to_path $p
+done
 
 export LANG=en_US.UTF-8
 export DOTFILES_HOME="$HOME/dotfiles"
 
 export LESS=XR
-
-# PYTHON ENVS
-. "$DOTFILES_HOME/python.env"
 
 # USER stuff and custom local overrides
 exists "$HOME/.alias" && . "$HOME/.alias"
@@ -67,13 +76,12 @@ HISTSIZE=50000
 SAVEHIST=100000
 
 # OH-MY-ZSH
-plugins= (
+plugins=(
   battery
   bgnotify
   command-not-found
   copybuffer
   docker
-  # emoji
   fast-syntax-highlighting
   fzf
   gh
@@ -82,7 +90,6 @@ plugins= (
   httpie
   isodate
   kubectx
-  kubetail
   microk8s
   nmap
   pip
@@ -93,16 +100,14 @@ plugins= (
   ubuntu
   ufw
   wakeonlan
-  z
   zsh-completions
-  zsh-vim-mode
   zsh-autosuggestions
 )
 CUSTOM_OMZ_FILE="$HOME/.zshrc.d/omz-additional.zsh" # e.g. for adding plugins
 if exists "$CUSTOM_OMZ_FILE"; then
   . $CUSTOM_OMZ_FILE
 fi
-source "$OMZ_HOME/oh-my-zsh.sh"
+source "$OMZ_HOME/oh-my-zsh.sh" 
 
 # plugin  settings
 notify_threshold=120 # for bgnotify min seconds
@@ -128,23 +133,11 @@ export PYENV_VIRTUALENV_MANAGE=false
 ### cargo
 exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
 
-### n (node)
-export N_PREFIX="$HOME/.n"
-exists "$N_PREFIX" && export PATH="$N_PREFIX/bin:$PATH"
-
 # my stuff
-exists "$DOTFILES_HOME/utd.sh" && . "$DOTFILES_HOME/utd.sh"
-exists "$DOTFILES_HOME/functions.sh" && . "$DOTFILES_HOME/functions.sh"
+exists "$DOTFILES_HOME"
 
+# Program aliases and custom setup
 command-found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
-
-# X env only
-alias clipboard='xclip -sel clip'
-# Wezterm only
-alias imgcat='wezterm imgcat'
-alias pdr='patch-deployment-image reader'
-
-# copilot
 command-found github-copilot-cli && eval "$(github-copilot-cli alias -- "$0")"
 
 ################################
@@ -156,39 +149,24 @@ command-found gcloud && . "$GCLOUD_HOME/completion.zsh.inc"
 command-found poe && eval "$(poe _zsh_completion)"
 command-found stern && eval "$(stern --completion zsh)"
 command-found yq && eval "$(yq shell-completion zsh)"
-command-found uv && eval "$(uv generate-shell-completion zsh)"
+command-found uv &&  eval "$(uv generate-shell-completion zsh)"
 
 command-found yq && eval "$(task --completion zsh)"
 export TASK_X_REMOTE_TASKFILES=1
 
 command-found rsctl && eval "$(rsctl --show-completion zsh)"
-for app in crane gcrane krane argo kn istioctl minikube skaffold helm kubectl; do
+for app in crane gcrane krane argo kn istioctl minikube skaffold helm kubectl chezmoi; do
   command-found $app && eval "$($app completion zsh)"
 done
 
-# wine
-if command-found wine; then
-  if exists "$HOME/.local/share/npp/notepad++.exe"; then
-    alias npp="nohup wine $HOME/.local/share/npp/notepad++.exe & >/dev/null 2>&1"
-  fi
-fi
-
-# below is needed to activate completions correctly
-compinit
-alias gactivate="gcloud config configurations activate"
-
 # pnpm
-export PNPM_HOME="/home/adam/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /home/adam/.dart-cli-completion/zsh-config.zsh ]] && . /home/adam/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
 
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
 
@@ -200,12 +178,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # bun completions
-[ -s "/home/adam/.bun/_bun" ] && source "/home/adam/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-[[ -s "/home/adam/.gvm/scripts/gvm" ]] && source "/home/adam/.gvm/scripts/gvm"
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
 
 [ ! -f "$HOME/.x-cmd.root/X" ] || . "$HOME/.x-cmd.root/X" # boot up x-cmd.

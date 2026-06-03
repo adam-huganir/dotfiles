@@ -1,0 +1,23 @@
+# Alias file
+# Sourced by .zshrc if it exists
+
+# X env only
+alias clipboard='xclip -sel clip'
+
+# Wezterm only
+alias imgcat='wezterm imgcat'
+
+# Gcloud
+alias gactivate="gcloud config configurations activate"
+
+# kubectl
+alias kstaging="kubectl --context staging"
+alias kprod="kubectl --context production"
+alias kops="kubectl --context ops"
+
+# docker
+alias doco="docker compose"
+alias rsdc="docker compose -f /home/redshred/redshred/build/compose.monitoring.yaml"
+
+# cargo
+alias xtask="cargo xtask"
