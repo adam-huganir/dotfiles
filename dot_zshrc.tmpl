@@ -9,14 +9,8 @@ setopt GLOB_STAR_SHORT
 unsetopt autocd
 set +x
 
-# helper to only run certain commands if the command is installed
-function command-found() {command -v $1 > /dev/null}
-function exists() {[ -s "$1" ]}
-function add_to_path() {
-  if [[ ":$PATH:" != *":$1:"* ]]; then
-    PATH="$1:$PATH"
-  fi
-}
+# Shared helper functions (command_found, exists, add_to_path)
+[ -s "$HOME/.functions" ] && . "$HOME/.functions"
 
 #     _______   ___    __
 #    / ____/ | / / |  / /
@@ -56,11 +50,11 @@ exists "$HOME/.python.env" && . "$HOME/.python.env"
 exists "$HOME/.zshrc.d/zshrc.zsh" && . "$HOME/.zshrc.d/zshrc.zsh"
 
 # EDITOR preference order
-if command-found nvim; then
+if command_found nvim; then
   export EDITOR='nvim'
-elif command-found nvim; then
+elif command_found nvim; then
   export EDITOR='nvim'
-elif command-found vim; then
+elif command_found vim; then
   export EDITOR='vim'
 else
   export EDITOR='nano'
@@ -128,7 +122,7 @@ exists "$HOME/.fzf.zsh" && . "$HOME/.fzf.zsh"
 
 ### pyenv
 export PYENV_VIRTUALENV_MANAGE=false
-# command-found pyenv && eval "$(pyenv init -)"
+# command_found pyenv && eval "$(pyenv init -)"
 
 ### cargo
 exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
@@ -137,26 +131,26 @@ exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
 exists "$DOTFILES_HOME"
 
 # Program aliases and custom setup
-command-found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
-command-found github-copilot-cli && eval "$(github-copilot-cli alias -- "$0")"
+command_found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
+command_found github-copilot-cli && eval "$(github-copilot-cli alias -- "$0")"
 
 ################################
 
 ### Misc completions ###
-command-found pipx && eval "$(register-python-argcomplete pipx)"
-command-found ruff && eval "$(ruff generate-shell-completion zsh)"
-command-found gcloud && . "$GCLOUD_HOME/completion.zsh.inc"
-command-found poe && eval "$(poe _zsh_completion)"
-command-found stern && eval "$(stern --completion zsh)"
-command-found yq && eval "$(yq shell-completion zsh)"
-command-found uv &&  eval "$(uv generate-shell-completion zsh)"
+command_found pipx && eval "$(register-python-argcomplete pipx)"
+command_found ruff && eval "$(ruff generate-shell-completion zsh)"
+command_found gcloud && . "$GCLOUD_HOME/completion.zsh.inc"
+command_found poe && eval "$(poe _zsh_completion)"
+command_found stern && eval "$(stern --completion zsh)"
+command_found yq && eval "$(yq shell-completion zsh)"
+command_found uv &&  eval "$(uv generate-shell-completion zsh)"
 
-command-found yq && eval "$(task --completion zsh)"
+command_found yq && eval "$(task --completion zsh)"
 export TASK_X_REMOTE_TASKFILES=1
 
-command-found rsctl && eval "$(rsctl --show-completion zsh)"
+command_found rsctl && eval "$(rsctl --show-completion zsh)"
 for app in crane gcrane krane argo kn istioctl minikube skaffold helm kubectl chezmoi; do
-  command-found $app && eval "$($app completion zsh)"
+  command_found $app && eval "$($app completion zsh)"
 done
 
 # pnpm

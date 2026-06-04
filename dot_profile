@@ -7,6 +7,9 @@ fi
 export DOTFILES_PROFILE_LOADED=1
 export DOTFILES_HOME="$HOME/dotfiles"
 
+# Shared helper functions (command_found, exists, add_to_path)
+[ -s "$HOME/.functions" ] && . "$HOME/.functions"
+
 export LANG="${LANG:-en_US.UTF-8}"
 
 # Python environmental variables

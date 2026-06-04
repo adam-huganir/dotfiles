@@ -1,0 +1,16 @@
+# Shared shell helper functions for both bash and zsh.
+# Sourced from ~/.profile, ~/.zshrc, etc. Keep this POSIX-compatible.
+
+# command_found <cmd>: true if <cmd> is on PATH
+command_found() { command -v "$1" >/dev/null 2>&1; }
+
+# exists <path>: true if <path> exists and is non-empty
+exists() { [ -s "$1" ]; }
+
+# add_to_path <dir>: prepend <dir> to PATH if not already present
+add_to_path() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
