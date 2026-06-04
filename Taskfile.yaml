@@ -1,0 +1,64 @@
+# https://taskfile.dev
+# Repo command runner for managing these chezmoi-based dotfiles.
+version: "3"
+
+vars:
+  DATA: .chezmoidata.yaml
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  use:
+    desc: 'Symlink {{.DATA}} to a config in configs/ (e.g. task use CONFIG=shredder-5-3.yaml)'
+    requires:
+      vars: [CONFIG]
+    cmds:
+      - test -f configs/{{.CONFIG}} || (echo "configs/{{.CONFIG}} not found" >&2; exit 1)
+      - ln -sfn configs/{{.CONFIG}} {{.DATA}}
+      - echo "{{.DATA}} -> $(readlink {{.DATA}})"
+
+  current:
+    desc: Show which config {{.DATA}} points at
+    cmds:
+      - 'readlink {{.DATA}} || echo "{{.DATA}} is not a symlink (or missing)"'
+    silent: true
+
+  configs:
+    desc: List available configs
+    cmds:
+      - ls -1 configs/
+    silent: true
+
+  data:
+    desc: Dump the chezmoi template data (what configs/* feeds into templates)
+    cmds:
+      - chezmoi data
+
+  diff:
+    desc: Diff current setup vs what chezmoi would deploy
+    cmds:
+      - chezmoi diff {{.CLI_ARGS}}
+
+  status:
+    desc: Show chezmoi status (files that differ)
+    cmds:
+      - chezmoi status
+
+  apply:
+    desc: Apply the deployed config to this machine
+    cmds:
+      - chezmoi apply {{.CLI_ARGS}}
+
+  managed:
+    desc: List files chezmoi manages
+    cmds:
+      - chezmoi managed
+
+  edit:
+    desc: Edit the active config for this machine
+    cmds:
+      - $${EDITOR:-vi} "$(readlink {{.DATA}})"

@@ -11,6 +11,7 @@ readonly_Documents/PowerShell/profile.ps1
 .gitignore
 .pre-commit-config.yaml
 README.md
+Taskfile.yaml
 configs
 unmanaged
 ref

@@ -2,3 +2,7 @@
 .idea/
 .devin/
 .code/
+
+# Per-machine chezmoi data: symlink this to the right configs/*.yaml
+# e.g. `task use CONFIG=shredder-5-3.yaml`
+.chezmoidata.yaml
