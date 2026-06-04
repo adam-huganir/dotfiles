@@ -9,56 +9,14 @@ setopt GLOB_STAR_SHORT
 unsetopt autocd
 set +x
 
-# Shared helper functions (command_found, exists, add_to_path)
-[ -s "$HOME/.functions" ] && . "$HOME/.functions"
+# Shared env + helpers (command_found, exists, add_to_path, PATH, exports) are
+# loaded by ~/.zshenv -> ~/.shenv before this file. This file is interactive-only.
 
-#     _______   ___    __
-#    / ____/ | / / |  / /
-#   / __/ /  |/ /| | / /
-#  / /___/ /|  / | |/ /
-# /_____/_/ |_/  |___/
-# PATH stuff
 export OMZ_HOME=$HOME/.oh-my-zsh
-export GCLOUD_HOME="/usr/share/google-cloud-sdk"
-export GOPRIVATE=github.com/redshred
-export PYENV_ROOT="$HOME/.pyenv"
-
-for p in \
-	$HOME/dotfiles/scripts \
-	$HOME/.local/bin \
-	$PYENV_ROOT/bin \
-	$GCLOUD_HOME/bin \
-	$GOROOT/bin \
-	$HOME/go/bin \
-	$HOME/.local/flutter/bin \
-	$HOME/.lmstudio/bin \
-	$HOME/.yarn/bin \
-	$HOME/.config/yarn/global/node_modules/.bin \
-; do
-	add_to_path $p
-done
-
-export LANG=en_US.UTF-8
-export DOTFILES_HOME="$HOME/dotfiles"
-
-export LESS=XR
 
 # USER stuff and custom local overrides
 exists "$HOME/.alias" && . "$HOME/.alias"
-exists "$HOME/.path" && . "$HOME/.path"
-exists "$HOME/.python.env" && . "$HOME/.python.env"
 exists "$HOME/.zshrc.d/zshrc.zsh" && . "$HOME/.zshrc.d/zshrc.zsh"
-
-# EDITOR preference order
-if command_found nvim; then
-  export EDITOR='nvim'
-elif command_found nvim; then
-  export EDITOR='nvim'
-elif command_found vim; then
-  export EDITOR='vim'
-else
-  export EDITOR='nano'
-fi
 
 ###### BEGIN  OH-MY-ZSH ######
 ZSH_THEME="agnoster" # starship overrides
@@ -121,14 +79,7 @@ MODE_CURSOR_VLINE="$MODE_CURSOR_VISUAL #00ffff"
 exists "$HOME/.fzf.zsh" && . "$HOME/.fzf.zsh"
 
 ### pyenv
-export PYENV_VIRTUALENV_MANAGE=false
 # command_found pyenv && eval "$(pyenv init -)"
-
-### cargo
-exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
-
-# my stuff
-exists "$DOTFILES_HOME"
 
 # Program aliases and custom setup
 command_found thefuck && eval $(thefuck --alias) && eval $(thefuck --alias oops)
@@ -146,39 +97,24 @@ command_found yq && eval "$(yq shell-completion zsh)"
 command_found uv &&  eval "$(uv generate-shell-completion zsh)"
 
 command_found yq && eval "$(task --completion zsh)"
-export TASK_X_REMOTE_TASKFILES=1
 
 command_found rsctl && eval "$(rsctl --show-completion zsh)"
 for app in crane gcrane krane argo kn istioctl minikube skaffold helm kubectl chezmoi; do
   command_found $app && eval "$($app completion zsh)"
 done
 
-# pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-
 # gvm installs a chpwd hook whose helpers (_encode/_decode) are dropped by
 # Claude Code's shell snapshotter, spamming "command not found" on every cd.
 # It's useless in Claude's non-interactive shell, so skip it there.
 [[ -z "$CLAUDECODE" && -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
 
-export TASK_X_REMOTE_TASKFILES=1
 set +x
 
-export NVM_DIR="$HOME/.nvm"
+# nvm (NVM_DIR exported in ~/.shenv)
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
-# bun completions
+# bun completions (BUN_INSTALL exported in ~/.shenv)
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 [ ! -f "$HOME/.x-cmd.root/X" ] || . "$HOME/.x-cmd.root/X" # boot up x-cmd.

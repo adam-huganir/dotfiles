@@ -1,0 +1,3 @@
+# Targets chezmoi should delete from the destination on apply.
+# .functions was folded into ~/.shenv.
+.functions

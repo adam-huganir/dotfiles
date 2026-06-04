@@ -1,0 +1,3 @@
+# zsh reads this on every invocation (interactive, login, scripts).
+# Keep it minimal: just the shared environment + helpers.
+[ -s "$HOME/.shenv" ] && . "$HOME/.shenv"

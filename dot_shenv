@@ -1,0 +1,82 @@
+# Shared shell environment + helper functions for bash and zsh.
+# POSIX-compatible. The "always" tier: sourced by ~/.zshenv (zsh, every shell)
+# and by ~/.profile / ~/.bashrc (bash). Keep interactive-only config out of here.
+
+# --- helper functions ---------------------------------------------------------
+
+# command_found <cmd>: true if <cmd> is on PATH
+command_found() { command -v "$1" >/dev/null 2>&1; }
+
+# exists <path>: true if <path> exists and is non-empty
+exists() { [ -s "$1" ]; }
+
+# add_to_path <dir>: prepend <dir> to PATH if not already present
+add_to_path() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
+
+# --- environment --------------------------------------------------------------
+
+export LANG="${LANG:-en_US.UTF-8}"
+export LESS=XR
+export DOTFILES_HOME="$HOME/dotfiles"
+
+export GOPRIVATE=github.com/redshred
+export GCLOUD_HOME="/usr/share/google-cloud-sdk"
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PYENV_VIRTUALENV_MANAGE=false
+
+# Python: keep caches out of source trees, sane I/O defaults
+export PYTHONPYCACHEPREFIX="$HOME/.__pycache__"
+export PYTHONUNBUFFERED=true
+export PYTHONIOENCODING=utf-8
+
+export TASK_X_REMOTE_TASKFILES=1
+
+# Tool homes (the loaders themselves live in the interactive rc files)
+export NVM_DIR="$HOME/.nvm"
+export BUN_INSTALL="$HOME/.bun"
+export PNPM_HOME="$HOME/.local/share/pnpm"
+
+# EDITOR preference order
+if command_found nvim; then
+  export EDITOR=nvim
+elif command_found vim; then
+  export EDITOR=vim
+else
+  export EDITOR=nano
+fi
+
+# --- PATH ---------------------------------------------------------------------
+
+for _p in \
+  "$HOME/bin" \
+  "$HOME/.local/bin" \
+  "$DOTFILES_HOME/scripts" \
+  "$PYENV_ROOT/bin" \
+  "$GCLOUD_HOME/bin" \
+  "$GOROOT/bin" \
+  "$HOME/go/bin" \
+  "$HOME/.local/flutter/bin" \
+  "$HOME/.lmstudio/bin" \
+  "$HOME/.yarn/bin" \
+  "$HOME/.config/yarn/global/node_modules/.bin" \
+  "$PNPM_HOME" \
+  "$BUN_INSTALL/bin" \
+  "$HOME/.local/share/JetBrains/Toolbox/scripts" \
+; do
+  [ -d "$_p" ] && add_to_path "$_p"
+done
+unset _p
+export PATH
+
+# cargo (rust) env + PATH — the single source of this
+exists "$HOME/.cargo/env" && . "$HOME/.cargo/env"
+
+# Optional local overrides (not tracked)
+exists "$HOME/.path" && . "$HOME/.path"
+exists "$HOME/.python.env" && . "$HOME/.python.env"

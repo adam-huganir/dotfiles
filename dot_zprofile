@@ -1,0 +1,5 @@
+# zsh login shells, sourced after ~/.zshenv and before ~/.zshrc.
+# Shared environment already loaded via ~/.zshenv -> ~/.shenv.
+# Put login-only setup here (e.g. ssh-agent/gpg-agent startup, session env,
+# login greetings) — things that should run once per login but are neither
+# needed by every shell nor part of interactive config.

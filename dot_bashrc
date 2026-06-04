@@ -1,11 +1,10 @@
-# Bash config
+# Bash interactive config.
 
-# Shared environment for bash and zsh (PATH, toolchains, python env, etc.)
-if [ -s "$HOME/.profile" ]; then
-  . "$HOME/.profile"
-fi
+# Shared environment + helpers (PATH, exports, command_found/exists/add_to_path).
+# Sourced directly here because non-login bash shells don't read ~/.profile.
+[ -s "$HOME/.shenv" ] && . "$HOME/.shenv"
 
-# If not running interactively, don't do anything
+# If not running interactively, don't do anything further.
 case $- in
     *i*) ;;
       *) return;;
@@ -93,3 +92,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Shared aliases (also sourced by zsh)
+[ -s "$HOME/.alias" ] && . "$HOME/.alias"
